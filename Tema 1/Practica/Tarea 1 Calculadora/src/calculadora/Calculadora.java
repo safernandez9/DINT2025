@@ -1,138 +1,191 @@
+//Saúl Fernández Salgado
+
 package calculadora;
 
-import java.awt.EventQueue;
-
-
 import java.awt.*;
-import java.awt.event.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 import javax.swing.*;
 
 public class Calculadora extends JFrame {
 
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
-    private String operacion = "";
-    private JTextField textField;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Calculadora frame = new Calculadora();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+	private static final long serialVersionUID = 1L;
+	private JTextField pantalla;
+	private String operacionActual = ""; // cadena que muestra la operación (con espacios entre tokens)
+	private boolean mostrarResultado = false; // si se mostró un resultado y el siguiente número debe reemplazar
+
+	public Calculadora() {
+		setTitle("Calculadora");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(320, 420);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		setLayout(new BorderLayout(6, 6));
+
+		// PANTALLA (muestra siempre la operación en curso)
+		pantalla = new JTextField();
+		pantalla.setEditable(false);
+		pantalla.setFont(new Font("SansSerif", Font.BOLD, 26));
+		pantalla.setHorizontalAlignment(SwingConstants.RIGHT);
+		pantalla.setPreferredSize(new Dimension(0, 70));
+		pantalla.setBackground(Color.WHITE);
+		add(pantalla, BorderLayout.NORTH);
+
+		// PANEL DE BOTONES (5 filas x 4 columnas)
+		JPanel panelBotones = new JPanel(new GridLayout(5, 4, 8, 8));
+		panelBotones.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		add(panelBotones, BorderLayout.CENTER);
+
+		String[] botones = { "7", "8", "9", "+", "6", "5", "4", "-", "3", "2", "1", "/", "C", "0", "=", "X" };
+
+		for (String texto : botones) {
+			JButton boton = new JButton(texto);
+			boton.setFont(new Font("SansSerif", Font.BOLD, 20));
+			boton.setFocusPainted(false);
+			// Colores aproximados según la imagen
+			if (texto.equals("C")) {
+				boton.setBackground(new Color(255, 182, 193)); // rosita
+			} else if (texto.equals("=")) {
+				boton.setBackground(new Color(180, 255, 200)); // verde claro
+			} else if ("+-/X".contains(texto)) {
+				boton.setBackground(new Color(224, 176, 255)); // lila
+			} else {
+				boton.setBackground(new Color(174, 214, 241)); // azul claro para números
 			}
-		});
+			boton.setOpaque(true);
+			boton.setBorderPainted(false);
+			panelBotones.add(boton);
+
+			// Listener sencillo
+			boton.addActionListener(e -> manejarEntrada(texto));
+		}
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public Calculadora() {
-		
-	        setTitle("Calculadora");
-	        setSize(300, 400);
-	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	        setLocationRelativeTo(null);
-	        GridBagLayout gridBagLayout = new GridBagLayout();
-	        gridBagLayout.columnWidths = new int[]{0, 0};
-	        gridBagLayout.rowHeights = new int[]{0, 0, 0};
-	        gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-	        gridBagLayout.rowWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
-	        getContentPane().setLayout(gridBagLayout);
-	        
-	        JPanel panel = new JPanel();
-	        GridBagConstraints gbc_panel = new GridBagConstraints();
-	        gbc_panel.weighty = 1.0;
-	        gbc_panel.weightx = 1.0;
-	        gbc_panel.fill = GridBagConstraints.BOTH;
-	        gbc_panel.gridx = 0;
-	        gbc_panel.gridy = 0;
-	        getContentPane().add(panel, gbc_panel);
-	        GridBagLayout gbl_panel = new GridBagLayout();
-	        gbl_panel.columnWidths = new int[]{0, 0};
-	        gbl_panel.rowHeights = new int[]{0, 0, 0};
-	        gbl_panel.columnWeights = new double[]{0.0, Double.MIN_VALUE};
-	        gbl_panel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
-	        panel.setLayout(gbl_panel);
-	        
-	        textField = new JTextField();
-	        GridBagConstraints gbc_textField = new GridBagConstraints();
-	        gbc_textField.insets = new Insets(20, 20, 20, 20);
-	        gbc_textField.fill = GridBagConstraints.BOTH;
-	        gbc_textField.gridheight = 0;
-	        gbc_textField.gridwidth = 0;
-	        gbc_textField.gridx = 0;
-	        gbc_textField.gridy = 0;
-	        panel.add(textField, gbc_textField);
-	        textField.setColumns(10);
-	        
-	        JPanel panel_1 = new JPanel();
-	        FlowLayout flowLayout_1 = (FlowLayout) panel_1.getLayout();
-	        flowLayout_1.setVgap(0);
-	        GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-	        gbc_panel_1.weighty = 5.0;
-	        gbc_panel_1.fill = GridBagConstraints.BOTH;
-	        gbc_panel_1.gridx = 0;
-	        gbc_panel_1.gridy = 1;
-	        getContentPane().add(panel_1, gbc_panel_1);
-	        
-	        String[] botones = {
-	            "7","8","9","+",
-	            "6","5","4","-",
-	            "3","2","1","/",
-	            "C","0","=","*"
-	        };
+	// Manejo de entradas de botones
+	private void manejarEntrada(String entrada) {
+		if (entrada.matches("[0-9]")) {
+			// Si anteriormente mostramos un resultado y el usuario introduce un número,
+			// comenzamos nueva operación
+			if (mostrarResultado) {
+				operacionActual = "";
+				mostrarResultado = false;
+			}
+			operacionActual += entrada;
+			pantalla.setText(operacionActual);
+		} else if (entrada.matches("[+\\-X/]")) {
+			// No permitimos empezar por operador vacío
+			if (operacionActual.isEmpty())
+				return;
 
-	        for (String texto : botones) {
-	            JButton boton = new JButton(texto);
-	            boton.addActionListener(new ActionListener() {
-	                public void actionPerformed(ActionEvent e) {
-	                    manejarEntrada(texto);
-	                }
-	            });
-	            panel.add(boton);
-	        }
+			// Si ya hay un operador al final, lo reemplazamos
+			if (ultimoEsOperador()) {
+				operacionActual = operacionActual.substring(0, operacionActual.length() - 3) + " " + entrada + " ";
+			} else {
+				operacionActual += " " + entrada + " ";
+			}
+			pantalla.setText(operacionActual);
+			mostrarResultado = false;
+		} else if (entrada.equals("=")) {
+			// Si está vacía o termina en operador, quitamos el operador final antes de
+			// evaluar
+			if (operacionActual.isEmpty())
+				return;
+			if (ultimoEsOperador()) {
+				// quitar el operador final (" <op> ")
+				operacionActual = operacionActual.substring(0, operacionActual.length() - 3).trim();
+			}
+			try {
+				String resultado = evaluarExpresion(operacionActual);
+				pantalla.setText(resultado);
+				operacionActual = resultado; // permitir continuar operaciones con el resultado
+				mostrarResultado = true;
+			} catch (Exception ex) {
+				pantalla.setText("Error");
+				operacionActual = "";
+				mostrarResultado = false;
+			}
+		} else if (entrada.equals("C")) {
+			operacionActual = "";
+			pantalla.setText("");
+			mostrarResultado = false;
+		}
+	}
 
-	
+	// Comprueba si la operación acaba con " <op> " (espacio, operador, espacio)
+	private boolean ultimoEsOperador() {
+		return operacionActual.endsWith(" + ") || operacionActual.endsWith(" - ") || operacionActual.endsWith(" X ")
+				|| operacionActual.endsWith(" / ");
+	}
+
+	// Evalúa la expresión en formato "Número [op Número]..."
+	// Soporta operadores: +, -, X (o *), /
+	// Aplica precedencia: primero X y /, luego + y -
+	private String evaluarExpresion(String expr) throws Exception {
+		expr = expr.trim();
+		if (expr.isEmpty())
+			throw new Exception("Vacía");
+
+		String[] partes = expr.split("\\s+");
+		ArrayList<String> tokens = new ArrayList<>(Arrays.asList(partes));
+
+		// Primera pasada: multiplicación y división
+		int i = 1;
+		while (i < tokens.size() - 1) {
+			String op = tokens.get(i);
+			if (op.equals("X") || op.equals("*") || op.equals("/")) {
+				BigDecimal a = new BigDecimal(tokens.get(i - 1));
+				BigDecimal b = new BigDecimal(tokens.get(i + 1));
+				BigDecimal r;
+				if (op.equals("X") || op.equals("*")) {
+					r = a.multiply(b);
+				} else {
+					if (b.compareTo(BigDecimal.ZERO) == 0)
+						throw new ArithmeticException("División por cero");
+					r = a.divide(b, 10, RoundingMode.HALF_UP);
+				}
+				// Reemplaza [i-1, i, i+1] por resultado
+				tokens.set(i - 1, r.stripTrailingZeros().toPlainString());
+				tokens.remove(i); // operador
+				tokens.remove(i); // segundo operando (ahora en la misma posición)
+				i = 1; // reinicia para buscar de nuevo
+			} else {
+				i += 2;
+			}
+		}
+
+		// Segunda pasada: suma y resta
+		i = 1;
+		while (i < tokens.size() - 1) {
+			String op = tokens.get(i);
+			BigDecimal a = new BigDecimal(tokens.get(i - 1));
+			BigDecimal b = new BigDecimal(tokens.get(i + 1));
+			BigDecimal r;
+			if (op.equals("+")) {
+				r = a.add(b);
+			} else if (op.equals("-")) {
+				r = a.subtract(b);
+			} else {
+				throw new Exception("Operador desconocido: " + op);
+			}
+			tokens.set(i - 1, r.stripTrailingZeros().toPlainString());
+			tokens.remove(i);
+			tokens.remove(i);
+			i = 1;
+		}
+
+		// Resultado final
+		return tokens.get(0);
+	}
+
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> {
+			Calculadora calc = new Calculadora();
+			calc.setVisible(true);
+		});
+
+	}
 }
-	
-	
-	private void manejarEntrada(String texto) {
-        if (texto.equals("C")) {
-            operacion = "";
-            pantalla.setText("");
-        } else if (texto.equals("=")) {
-            try {
-                // Evaluar la operación con ScriptEngine
-                javax.script.ScriptEngineManager mgr = new javax.script.ScriptEngineManager();
-                javax.script.ScriptEngine engine = mgr.getEngineByName("JavaScript");
-                Object resultado = engine.eval(operacion);
-                pantalla.setText(resultado.toString());
-                operacion = resultado.toString(); // permite seguir calculando
-            } catch (Exception ex) {
-                pantalla.setText("Error");
-                operacion = "";
-            }
-        } else {
-            // Si se pulsa un operador y el último ya era operador, se reemplaza
-            if ("+-*/".contains(texto)) {
-                if (!operacion.isEmpty() && "+-*/".contains(operacion.substring(operacion.length()-1))) {
-                    operacion = operacion.substring(0, operacion.length()-1) + texto;
-                } else {
-                    operacion += texto;
-                }
-            } else {
-                operacion += texto;
-            }
-            pantalla.setText(operacion);
-        }
-    }
 
 	
-}
