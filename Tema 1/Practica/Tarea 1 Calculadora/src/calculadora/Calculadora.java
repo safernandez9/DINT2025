@@ -44,7 +44,7 @@ public class Calculadora extends JFrame {
 			JButton boton = new JButton(texto);
 			boton.setFont(new Font("SansSerif", Font.BOLD, 20));
 			boton.setFocusPainted(false);
-			// Colores aproximados según la imagen
+			// Colores aproximados 
 			if (texto.equals("C")) {
 				boton.setBackground(new Color(255, 182, 193)); // rosita
 			} else if (texto.equals("=")) {
