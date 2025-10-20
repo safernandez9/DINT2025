@@ -49,12 +49,12 @@ public class TresEnRaya extends JFrame {
 
 		// CREO INTERFAZ Y PARTIDA
 
-		Juego partida = new Juego();
+		Juego partida = Juego.getInstance();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 
-		// MENU Y BOTONES DEL MENU (setAccelerator sirve para que las combinaciones de teclas seescuchen)
+		// MENU Y BOTONES DEL MENU (setAccelerator sirve para que las combinaciones de teclas se escuchen)
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -101,6 +101,7 @@ public class TresEnRaya extends JFrame {
 		panel_1.setLayout(gbl_panel_1);
 
 		// Creo botones y le asocio botones a un array bidimensional tablero
+		// LLamo a turno con el boton, natrççç
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
@@ -139,7 +140,16 @@ public class TresEnRaya extends JFrame {
 
 				// Código que se ejecuta después de cerrar el pop-up
 				partida.iniciarPartida();
+				lblTurno.setText("Es el turno de Usuario 1");
+				return;
 
+			}
+			
+			if (partida.comprobarEmpate()) {
+			    JOptionPane.showMessageDialog(null, "¡Empate!", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+			    partida.iniciarPartida();
+			    lblTurno.setText("Es el turno de Usuario 1");
+			    return;
 			}
 			partida.setTurno(2);
 
@@ -151,11 +161,20 @@ public class TresEnRaya extends JFrame {
 
 			if (partida.comprobarTablero()) {
 				JOptionPane.showMessageDialog(null, // componente padre (null = centrado en pantalla)
-						"Ganador el usuario 1!", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+						"Ganador el usuario " + partida.getTurno() + "!", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
 
 				// Código que se ejecuta después de cerrar el pop-up
 				partida.iniciarPartida();
+				lblTurno.setText("Es el turno de Usuario 1");
+				return;
 
+			}
+			
+			if (partida.comprobarEmpate()) {
+			    JOptionPane.showMessageDialog(null, "¡Empate!", "Mensaje", JOptionPane.INFORMATION_MESSAGE);
+			    partida.iniciarPartida();
+			    lblTurno.setText("Es el turno de Usuario 1");
+			    return;
 			}
 			partida.setTurno(1);
 		}

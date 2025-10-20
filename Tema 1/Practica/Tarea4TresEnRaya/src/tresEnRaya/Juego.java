@@ -10,14 +10,29 @@ public class Juego {
 	final int FILAS = 3;
 	final int COLUMNAS = 3;
 	final int VICTORIA = 3;
+	
+	private static Juego j = null;
 
 	int turno = 1;
 	JButton[][] tablero = new JButton[FILAS][COLUMNAS];
 	int[][] tableroMatriz = new int[FILAS][COLUMNAS];
+	
+	
+	// Uso un singleton para que solo pueda haber un objeto partida
+	private Juego() {
+	}
+	
+	public static Juego getInstance() {
+		if(j == null) {
+			j = new Juego();
+		}	
+		return j;	
+	}
 
 	/**
 	 * INICIA LA PARTIDA CON TURNO 1 Y LA MATRIZ AUXILIAR A 0
 	 */
+	
 	public void iniciarPartida() {
 		inicializarTableroMatriz(tableroMatriz, 0);
 		this.turno = 1;
@@ -61,7 +76,7 @@ public class Juego {
 	 */
 	public void asociarJugadorBoton(JButton boton) {
 		for(int i = 0; i< FILAS; i++) {
-			for(int j = 0; i < COLUMNAS; i++) {
+			for(int j = 0; j < COLUMNAS; j++) {
 				if(tablero[i][j] == boton) {
 					tableroMatriz[i][j] = this.turno;
 				}
@@ -104,7 +119,7 @@ public class Juego {
 
 		for (int i = 0; i < COLUMNAS; i++) {
 			for (int j = 0; j < FILAS; j++) {
-				if (!getBoton(j, i).isEnabled() && getCasilla(i, j) == this.turno) {
+				if (!getBoton(j, i).isEnabled() && getCasilla(j, i) == this.turno) {
 					punto++;
 				}
 			}
@@ -172,6 +187,22 @@ public class Juego {
 
 		return false;
 
+	}
+	
+	/**
+	 * Comrueba si hay un empate
+	 * @return
+	 */
+	public boolean comprobarEmpate() {
+	    for (int i = 0; i < FILAS; i++) {
+	        for (int j = 0; j < COLUMNAS; j++) {
+	            if (getBoton(i, j).isEnabled()) {
+	                return false; // hay una casilla libre, no hay empate
+	            }
+	        }
+	    }
+	    // Si todas están ocupadas y no hay ganador, empate
+	    return !comprobarTablero();
 	}
 	
 	// GETTERS Y SETTERS
