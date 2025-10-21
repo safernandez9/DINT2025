@@ -13,6 +13,9 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.FlowLayout;
 import javax.swing.JList;
+import java.awt.GridLayout;
+import javax.swing.AbstractListModel;
+import javax.swing.border.TitledBorder;
 
 public class T6JList extends JFrame {
 
@@ -57,6 +60,7 @@ public class T6JList extends JFrame {
 		contentPane.setLayout(gbl_contentPane);
 		
 		JPanel pnlDatos = new JPanel();
+		pnlDatos.setBorder(new TitledBorder(null, "Alfombra", TitledBorder.LEADING, TitledBorder.ABOVE_TOP, null, null));
 		pnlDatos.setName("Nova Alfombra");
 		GridBagConstraints gbc_pnlDatos = new GridBagConstraints();
 		gbc_pnlDatos.insets = new Insets(0, 0, 5, 0);
@@ -167,6 +171,7 @@ public class T6JList extends JFrame {
 		
 		
 		JPanel pnlLista = new JPanel();
+		pnlLista.setBorder(new TitledBorder(null, "Alfombras dispo\u00F1ibles", TitledBorder.LEADING, TitledBorder.ABOVE_TOP, null, null));
 		GridBagConstraints gbc_pnlLista = new GridBagConstraints();
 		gbc_pnlLista.insets = new Insets(0, 0, 5, 0);
 		gbc_pnlLista.weighty = 6.0;
@@ -174,28 +179,47 @@ public class T6JList extends JFrame {
 		gbc_pnlLista.gridx = 0;
 		gbc_pnlLista.gridy = 1;
 		contentPane.add(pnlLista, gbc_pnlLista);
-		pnlLista.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		pnlLista.setLayout(new GridLayout(0, 1, 0, 0));
 		
 		JPanel panel = new JPanel();
 		pnlLista.add(panel);
+		panel.setLayout(new GridLayout(1, 0, 0, 0));
 		
 		JList list = new JList();
 		panel.add(list);
 		
 		JPanel panel_1 = new JPanel();
-		pnlLista.add(panel_1);
-		FlowLayout fl_panel_1 = new FlowLayout(FlowLayout.CENTER, 5, 5);
-		panel_1.setLayout(fl_panel_1);
+		panel.add(panel_1);
+		GridBagLayout gbl_panel_1 = new GridBagLayout();
+		gbl_panel_1.columnWidths = new int[]{0, 0};
+		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0};
+		gbl_panel_1.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		panel_1.setLayout(gbl_panel_1);
 		
 		JButton btnNewButton = new JButton("New button");
-		panel_1.add(btnNewButton);
+		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		gbc_btnNewButton.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnNewButton.insets = new Insets(0, 20, 5, 20);
+		gbc_btnNewButton.gridx = 0;
+		gbc_btnNewButton.gridy = 0;
+		panel_1.add(btnNewButton, gbc_btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("New button");
+		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
+		gbc_btnNewButton_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnNewButton_1.insets = new Insets(0, 20, 5, 20);
+		gbc_btnNewButton_1.gridx = 0;
+		gbc_btnNewButton_1.gridy = 1;
+		panel_1.add(btnNewButton_1, gbc_btnNewButton_1);
 		
 		JButton btnNewButton_2 = new JButton("New button");
-		panel_1.add(btnNewButton_2);
-		
-		JButton btnNewButton_3 = new JButton("New button");
-		panel_1.add(btnNewButton_3);
+		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
+		gbc_btnNewButton_2.insets = new Insets(0, 20, 0, 20);
+		gbc_btnNewButton_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnNewButton_2.gridx = 0;
+		gbc_btnNewButton_2.gridy = 2;
+		panel_1.add(btnNewButton_2, gbc_btnNewButton_2);
 
 	}
-
 }
