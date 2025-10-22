@@ -2,6 +2,7 @@ package t6JList;
 
 
 public class Alfombra {
+	private int indice;
     private String modelo;
     private String cor;
     private int alto;
@@ -33,5 +34,11 @@ public class Alfombra {
 
     public int getAncho() {
         return ancho;
+    }
+    public int getIndice() {
+    	return indice;
+    }
+    public void setIndice() {
+    	
     }
 }

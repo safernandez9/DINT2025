@@ -15,6 +15,7 @@ import java.awt.FlowLayout;
 import javax.swing.JList;
 import java.awt.GridLayout;
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.border.TitledBorder;
 
 public class T6JList extends JFrame {
@@ -25,6 +26,10 @@ public class T6JList extends JFrame {
 	private JTextField tfCor;
 	private JTextField tfAncho;
 	private JTextField tfAlto;
+	private JList listaAlfombras;
+	private JButton btnInformacion;
+	private DefaultListModel<Alfombra> modelo = new DefaultListModel<Alfombra>();;
+	
 
 	/**
 	 * Launch the application.
@@ -74,6 +79,8 @@ public class T6JList extends JFrame {
 		gbl_pnlDatos.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gbl_pnlDatos.rowWeights = new double[]{1.0, 1.0};
 		pnlDatos.setLayout(gbl_pnlDatos);
+		
+		// FORMULARIO
 		
 		JLabel lblModelo = new JLabel("Modelo");
 		GridBagConstraints gbc_lblModelo = new GridBagConstraints();
@@ -151,6 +158,13 @@ public class T6JList extends JFrame {
 		pnlDatos.add(tfAlto, gbc_tfAlto);
 		tfAlto.setColumns(10);
 		
+		JLabel lblCM2 = new JLabel("(cm)");
+		GridBagConstraints gbc_lblCM2 = new GridBagConstraints();
+		gbc_lblCM2.insets = new Insets(0, 0, 5, 5);
+		gbc_lblCM2.gridx = 7;
+		gbc_lblCM2.gridy = 1;
+		pnlDatos.add(lblCM2, gbc_lblCM2);
+		
 		JButton btnEngadir = new JButton("Engadir");
 		GridBagConstraints gbc_btnEngadir = new GridBagConstraints();
 		gbc_btnEngadir.insets = new Insets(0, 0, 5, 0);
@@ -159,16 +173,18 @@ public class T6JList extends JFrame {
 		
 		pnlDatos.add(btnEngadir, gbc_btnEngadir);
 		btnEngadir.addActionListener(e -> {
-			Alfombra a = new Alfombra(tfModelo.getText(), tfCor.getText(), Integer.parseInt(tfAncho.getText()), Integer.parseInt(tfAlto.getText())); 
+			if(!tfModelo.getText().trim().isEmpty() && !tfCor.getText().trim().isEmpty() && !tfAncho.getText().trim().isEmpty() && !tfAlto.getText().trim().isEmpty()) {
+				Alfombra a = new Alfombra(tfModelo.getText(), tfCor.getText(), Integer.parseInt(tfAncho.getText()), Integer.parseInt(tfAlto.getText())); 
+				añadirAlfombraLista(a);
+			}
+			else {
+				//POPUP
+			}
+			
 		});
 		
-		JLabel lblCM2 = new JLabel("(cm)");
-		GridBagConstraints gbc_lblCM2 = new GridBagConstraints();
-		gbc_lblCM2.insets = new Insets(0, 0, 5, 5);
-		gbc_lblCM2.gridx = 7;
-		gbc_lblCM2.gridy = 1;
-		pnlDatos.add(lblCM2, gbc_lblCM2);
 		
+		// PANEL INFERIOR
 		
 		JPanel pnlLista = new JPanel();
 		pnlLista.setBorder(new TitledBorder(null, "Alfombras dispo\u00F1ibles", TitledBorder.LEADING, TitledBorder.ABOVE_TOP, null, null));
@@ -181,45 +197,59 @@ public class T6JList extends JFrame {
 		contentPane.add(pnlLista, gbc_pnlLista);
 		pnlLista.setLayout(new GridLayout(0, 1, 0, 0));
 		
-		JPanel panel = new JPanel();
-		pnlLista.add(panel);
-		panel.setLayout(new GridLayout(1, 0, 0, 0));
+		JPanel pnlInferior = new JPanel();
+		pnlLista.add(pnlInferior);
+		pnlInferior.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		JList list = new JList();
-		panel.add(list);
 		
-		JPanel panel_1 = new JPanel();
-		panel.add(panel_1);
-		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[]{0, 0};
-		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0};
-		gbl_panel_1.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		panel_1.setLayout(gbl_panel_1);
+		modelo = 
 		
-		JButton btnNewButton = new JButton("New button");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton.insets = new Insets(0, 20, 5, 20);
-		gbc_btnNewButton.gridx = 0;
-		gbc_btnNewButton.gridy = 0;
-		panel_1.add(btnNewButton, gbc_btnNewButton);
+		modelo.addElement(null);
 		
-		JButton btnNewButton_1 = new JButton("New button");
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton_1.insets = new Insets(0, 20, 5, 20);
-		gbc_btnNewButton_1.gridx = 0;
-		gbc_btnNewButton_1.gridy = 1;
-		panel_1.add(btnNewButton_1, gbc_btnNewButton_1);
+		modelo.remo
 		
-		JButton btnNewButton_2 = new JButton("New button");
-		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-		gbc_btnNewButton_2.insets = new Insets(0, 20, 0, 20);
-		gbc_btnNewButton_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnNewButton_2.gridx = 0;
-		gbc_btnNewButton_2.gridy = 2;
-		panel_1.add(btnNewButton_2, gbc_btnNewButton_2);
+		
+		listaAlfombras = new JList();
+		listaAlfombras.setModel(modelo);
+		pnlInferior.add(listaAlfombras);
+		
+		JPanel pnlOpcionesAlfombras = new JPanel();
+		pnlInferior.add(pnlOpcionesAlfombras);
+		GridBagLayout gbl_pnlOpcionesAlfombras = new GridBagLayout();
+		gbl_pnlOpcionesAlfombras.columnWidths = new int[]{0, 0};
+		gbl_pnlOpcionesAlfombras.rowHeights = new int[]{0, 0, 0, 0};
+		gbl_pnlOpcionesAlfombras.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_pnlOpcionesAlfombras.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		pnlOpcionesAlfombras.setLayout(gbl_pnlOpcionesAlfombras);
+		
+		btnInformacion = new JButton("Información das alfombras");
+		GridBagConstraints gbc_btnInformacion = new GridBagConstraints();
+		gbc_btnInformacion.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnInformacion.insets = new Insets(0, 20, 5, 20);
+		gbc_btnInformacion.gridx = 0;
+		gbc_btnInformacion.gridy = 0;
+		pnlOpcionesAlfombras.add(btnInformacion, gbc_btnInformacion);
+		
+		JButton btnEliminarUna = new JButton("Eliminar alfombra");
+		GridBagConstraints gbc_btnEliminarUna = new GridBagConstraints();
+		gbc_btnEliminarUna.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnEliminarUna.insets = new Insets(0, 20, 5, 20);
+		gbc_btnEliminarUna.gridx = 0;
+		gbc_btnEliminarUna.gridy = 1;
+		pnlOpcionesAlfombras.add(btnEliminarUna, gbc_btnEliminarUna);
+		
+		JButton btnEliminarTodas = new JButton("Eliminar todas");
+		GridBagConstraints gbc_btnEliminarTodas = new GridBagConstraints();
+		gbc_btnEliminarTodas.insets = new Insets(0, 20, 0, 20);
+		gbc_btnEliminarTodas.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnEliminarTodas.gridx = 0;
+		gbc_btnEliminarTodas.gridy = 2;
+		pnlOpcionesAlfombras.add(btnEliminarTodas, gbc_btnEliminarTodas);
 
+	}
+
+	private void añadirAlfombraLista(Alfombra a) {
+		
+		
 	}
 }
