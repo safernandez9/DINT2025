@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -24,9 +26,12 @@ import java.awt.GridLayout;
 import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.border.TitledBorder;
+
+import tarea7jcombobox.LimiteLonxitudeJTextField;
+
 import javax.swing.JScrollPane;
 
-public class T6JList extends JFrame implements ActionListener {
+public class T6JList extends JFrame implements ActionListener, MouseListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -46,7 +51,6 @@ public class T6JList extends JFrame implements ActionListener {
 	private JLabel lblAlto;
 	private JLabel lblCM2;
 	private JButton btnEngadir;
-	
 
 	/**
 	 * Launch the application.
@@ -68,21 +72,22 @@ public class T6JList extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public T6JList() {
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{0, 0};
-		gbl_contentPane.rowHeights = new int[] {0, 0};
-		gbl_contentPane.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{1.0, 1.0};
+		gbl_contentPane.columnWidths = new int[] { 0, 0 };
+		gbl_contentPane.rowHeights = new int[] { 0, 0 };
+		gbl_contentPane.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 1.0, 1.0 };
 		contentPane.setLayout(gbl_contentPane);
-		
+
 		JPanel pnlDatos = new JPanel();
-		pnlDatos.setBorder(new TitledBorder(null, "Alfombra", TitledBorder.LEADING, TitledBorder.ABOVE_TOP, null, null));
+		pnlDatos.setBorder(
+				new TitledBorder(null, "Alfombra", TitledBorder.LEADING, TitledBorder.ABOVE_TOP, null, null));
 		pnlDatos.setName("Nova Alfombra");
 		GridBagConstraints gbc_pnlDatos = new GridBagConstraints();
 		gbc_pnlDatos.insets = new Insets(0, 0, 5, 0);
@@ -91,14 +96,14 @@ public class T6JList extends JFrame implements ActionListener {
 		gbc_pnlDatos.gridy = 0;
 		contentPane.add(pnlDatos, gbc_pnlDatos);
 		GridBagLayout gbl_pnlDatos = new GridBagLayout();
-		gbl_pnlDatos.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_pnlDatos.rowHeights = new int[] {0, 0};
-		gbl_pnlDatos.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_pnlDatos.rowWeights = new double[]{1.0, 1.0};
+		gbl_pnlDatos.columnWidths = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_pnlDatos.rowHeights = new int[] { 0, 0 };
+		gbl_pnlDatos.columnWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_pnlDatos.rowWeights = new double[] { 1.0, 1.0 };
 		pnlDatos.setLayout(gbl_pnlDatos);
-		
+
 		// FORMULARIO
-		
+
 		lblModelo = new JLabel("Modelo");
 		GridBagConstraints gbc_lblModelo = new GridBagConstraints();
 		gbc_lblModelo.insets = new Insets(0, 0, 5, 5);
@@ -106,7 +111,7 @@ public class T6JList extends JFrame implements ActionListener {
 		gbc_lblModelo.gridx = 0;
 		gbc_lblModelo.gridy = 0;
 		pnlDatos.add(lblModelo, gbc_lblModelo);
-		
+
 		tfModelo = new JTextField();
 		GridBagConstraints gbc_tfModelo = new GridBagConstraints();
 		gbc_tfModelo.gridwidth = 7;
@@ -116,7 +121,7 @@ public class T6JList extends JFrame implements ActionListener {
 		gbc_tfModelo.gridy = 0;
 		pnlDatos.add(tfModelo, gbc_tfModelo);
 		tfModelo.setColumns(10);
-		
+
 		lblCor = new JLabel("Cor");
 		GridBagConstraints gbc_lblCor = new GridBagConstraints();
 		gbc_lblCor.anchor = GridBagConstraints.EAST;
@@ -124,7 +129,7 @@ public class T6JList extends JFrame implements ActionListener {
 		gbc_lblCor.gridx = 0;
 		gbc_lblCor.gridy = 1;
 		pnlDatos.add(lblCor, gbc_lblCor);
-		
+
 		tfCor = new JTextField();
 		GridBagConstraints gbc_tfCor = new GridBagConstraints();
 		gbc_tfCor.insets = new Insets(0, 0, 5, 5);
@@ -133,7 +138,7 @@ public class T6JList extends JFrame implements ActionListener {
 		gbc_tfCor.gridy = 1;
 		pnlDatos.add(tfCor, gbc_tfCor);
 		tfCor.setColumns(10);
-		
+
 		lblAncho = new JLabel("Ancho");
 		GridBagConstraints gbc_lblAncho = new GridBagConstraints();
 		gbc_lblAncho.insets = new Insets(0, 0, 5, 5);
@@ -141,7 +146,7 @@ public class T6JList extends JFrame implements ActionListener {
 		gbc_lblAncho.gridx = 2;
 		gbc_lblAncho.gridy = 1;
 		pnlDatos.add(lblAncho, gbc_lblAncho);
-		
+
 		tfAncho = new JTextField();
 		GridBagConstraints gbc_tfAncho = new GridBagConstraints();
 		tfAncho.setDocument(new LimiteLonxitudeJTextField(5));
@@ -151,14 +156,14 @@ public class T6JList extends JFrame implements ActionListener {
 		gbc_tfAncho.gridy = 1;
 		pnlDatos.add(tfAncho, gbc_tfAncho);
 		tfAncho.setColumns(10);
-		
+
 		lblCM1 = new JLabel("(cm)");
 		GridBagConstraints gbc_lblCM1 = new GridBagConstraints();
 		gbc_lblCM1.insets = new Insets(0, 0, 5, 5);
 		gbc_lblCM1.gridx = 4;
 		gbc_lblCM1.gridy = 1;
 		pnlDatos.add(lblCM1, gbc_lblCM1);
-		
+
 		lblAlto = new JLabel("Alto");
 		GridBagConstraints gbc_lblAlto = new GridBagConstraints();
 		gbc_lblAlto.insets = new Insets(0, 0, 5, 5);
@@ -166,7 +171,7 @@ public class T6JList extends JFrame implements ActionListener {
 		gbc_lblAlto.gridx = 5;
 		gbc_lblAlto.gridy = 1;
 		pnlDatos.add(lblAlto, gbc_lblAlto);
-		
+
 		tfAlto = new JTextField();
 		GridBagConstraints gbc_tfAlto = new GridBagConstraints();
 		tfAncho.setDocument(new LimiteLonxitudeJTextField(5));
@@ -176,26 +181,27 @@ public class T6JList extends JFrame implements ActionListener {
 		gbc_tfAlto.gridy = 1;
 		pnlDatos.add(tfAlto, gbc_tfAlto);
 		tfAlto.setColumns(10);
-		
+
 		lblCM2 = new JLabel("(cm)");
 		GridBagConstraints gbc_lblCM2 = new GridBagConstraints();
 		gbc_lblCM2.insets = new Insets(0, 0, 5, 5);
 		gbc_lblCM2.gridx = 7;
 		gbc_lblCM2.gridy = 1;
 		pnlDatos.add(lblCM2, gbc_lblCM2);
-		
+
 		btnEngadir = new JButton("Engadir");
 		GridBagConstraints gbc_btnEngadir = new GridBagConstraints();
 		gbc_btnEngadir.insets = new Insets(0, 0, 5, 0);
 		gbc_btnEngadir.gridx = 8;
-		gbc_btnEngadir.gridy = 0;		
+		gbc_btnEngadir.gridy = 0;
 		btnEngadir.addActionListener(this);
 		pnlDatos.add(btnEngadir, gbc_btnEngadir);
-		
+
 		// PANEL INFERIOR
-		
+
 		JPanel pnlLista = new JPanel();
-		pnlLista.setBorder(new TitledBorder(null, "Alfombras dispo\u00F1ibles", TitledBorder.LEADING, TitledBorder.ABOVE_TOP, null, null));
+		pnlLista.setBorder(new TitledBorder(null, "Alfombras dispo\u00F1ibles", TitledBorder.LEADING,
+				TitledBorder.ABOVE_TOP, null, null));
 		GridBagConstraints gbc_pnlLista = new GridBagConstraints();
 		gbc_pnlLista.insets = new Insets(0, 0, 5, 0);
 		gbc_pnlLista.weighty = 6.0;
@@ -204,30 +210,31 @@ public class T6JList extends JFrame implements ActionListener {
 		gbc_pnlLista.gridy = 1;
 		contentPane.add(pnlLista, gbc_pnlLista);
 		pnlLista.setLayout(new GridLayout(0, 1, 0, 0));
-		
+
 		JPanel pnlInferior = new JPanel();
 		pnlLista.add(pnlInferior);
 		pnlInferior.setLayout(new GridLayout(1, 0, 0, 0));
-		
+
 		// Lista dentro del ScrollPane
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		pnlInferior.add(scrollPane);
-		
+
 		listaAlfombras = new JList();
 		// Asocio lista grafica a modelo de datos (DefaultListModel<Alfombra>)
 		listaAlfombras.setModel(modelo);
+		listaAlfombras.addMouseListener(this);
 		scrollPane.setViewportView(listaAlfombras);
-		
+
 		JPanel pnlOpcionesAlfombras = new JPanel();
 		pnlInferior.add(pnlOpcionesAlfombras);
 		GridBagLayout gbl_pnlOpcionesAlfombras = new GridBagLayout();
-		gbl_pnlOpcionesAlfombras.columnWidths = new int[]{0, 0};
-		gbl_pnlOpcionesAlfombras.rowHeights = new int[]{0, 0, 0, 0};
-		gbl_pnlOpcionesAlfombras.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_pnlOpcionesAlfombras.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_pnlOpcionesAlfombras.columnWidths = new int[] { 0, 0 };
+		gbl_pnlOpcionesAlfombras.rowHeights = new int[] { 0, 0, 0, 0 };
+		gbl_pnlOpcionesAlfombras.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_pnlOpcionesAlfombras.rowWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		pnlOpcionesAlfombras.setLayout(gbl_pnlOpcionesAlfombras);
-		
+
 		btnInformacion = new JButton("Información das alfombras");
 		GridBagConstraints gbc_btnInformacion = new GridBagConstraints();
 		gbc_btnInformacion.fill = GridBagConstraints.HORIZONTAL;
@@ -236,88 +243,200 @@ public class T6JList extends JFrame implements ActionListener {
 		gbc_btnInformacion.gridy = 0;
 		btnInformacion.addActionListener(this);
 		pnlOpcionesAlfombras.add(btnInformacion, gbc_btnInformacion);
-		
+
 		btnEliminarUna = new JButton("Eliminar alfombra");
 		GridBagConstraints gbc_btnEliminarUna = new GridBagConstraints();
 		gbc_btnEliminarUna.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnEliminarUna.insets = new Insets(0, 20, 5, 20);
 		gbc_btnEliminarUna.gridx = 0;
 		gbc_btnEliminarUna.gridy = 1;
+		btnEliminarUna.addActionListener(this);
 		pnlOpcionesAlfombras.add(btnEliminarUna, gbc_btnEliminarUna);
-		
+
 		btnEliminarTodas = new JButton("Eliminar todas");
 		GridBagConstraints gbc_btnEliminarTodas = new GridBagConstraints();
 		gbc_btnEliminarTodas.insets = new Insets(0, 20, 0, 20);
 		gbc_btnEliminarTodas.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnEliminarTodas.gridx = 0;
 		gbc_btnEliminarTodas.gridy = 2;
+		btnEliminarTodas.addActionListener(this);
 		pnlOpcionesAlfombras.add(btnEliminarTodas, gbc_btnEliminarTodas);
-		
-		
+
 	}
-	
+
 	private void engadir() {
-		if(!tfModelo.getText().trim().isEmpty() && !tfCor.getText().trim().isEmpty() && !tfAncho.getText().trim().isEmpty() && !tfAlto.getText().trim().isEmpty()) {
-			Alfombra a = new Alfombra(tfModelo.getText(), tfCor.getText(), Integer.parseInt(tfAncho.getText()), Integer.parseInt(tfAlto.getText())); 
+		if (!tfModelo.getText().trim().isEmpty() && !tfCor.getText().trim().isEmpty()
+				&& !tfAncho.getText().trim().isEmpty() && !tfAlto.getText().trim().isEmpty()) {
+			Alfombra a = new Alfombra(tfModelo.getText(), tfCor.getText(), Integer.parseInt(tfAncho.getText()),
+					Integer.parseInt(tfAlto.getText()));
 			modelo.addElement(a);
-		}
-		else {
-			// Primer campo contexto en el que se mostrará el pop-up. Segundo campo mensaje. Tercer campo título. Cuarto campo tipo de mensaje.
-			JOptionPane.showMessageDialog(this, "Rellene todos os campos para engadir unha alfombra.", "Erro", JOptionPane.ERROR_MESSAGE);
+			
+			// Limpar campos de texto
+			tfModelo.setText("");
+			tfCor.setText("");
+			tfAncho.setText("");
+			tfAlto.setText("");
+			
+		} else {
+			// Primer campo contexto en el que se mostrará el pop-up. Segundo campo mensaje.
+			// Tercer campo título. Cuarto campo tipo de mensaje.
+			JOptionPane.showMessageDialog(this, "Rellene todos os campos para engadir unha alfombra.", "Erro",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
+	// Mostrar información das alfombras seleccionadas
 	private void mostrarInfo() {
-		
+
 		// Comprobamos que haya alfombras
-		if(modelo.getSize()==0){
+		if (modelo.getSize() == 0) {
 			JOptionPane.showMessageDialog(this, "Non hai alfombras dispoñibles");
 			return;
-		 }
-		
+		}
+
 		// Compruebo si hay alguna seleccionada, si no la hay, getIndex devolverá -1
-		if(listaAlfombras.getSelectedIndex()==-1){
+		if (listaAlfombras.getSelectedIndex() == -1) {
 			JOptionPane.showMessageDialog(this, "Debe seleccionar ao menos unha alfombra");
 			return;
-		 } 
-		
-		//Cojo los indices de las alfombras que están seleccionadas
-		int posicionsSeleccionados[]=listaAlfombras.getSelectedIndices();
-				
-		String mensaxe="";
-		
-		// Recorro la lista de indices, busco en la lista Modelo la alfombra con ese indice y creo un mensaje con la info de todas
-		for(int i=0;i<posicionsSeleccionados.length;i++){
-			
-			Alfombra alfombra=modelo.getElementAt(posicionsSeleccionados[i]);
-			mensaxe=mensaxe+"MODELO: "+alfombra.getModelo()+"\nCOR: "+alfombra.getCor()+
-							"\nANCHO: "+alfombra.getAncho()+" cm\nALTO: "+alfombra.getAlto()+" cm\n\n"; 
 		}
-				
-		//Mostras información das alfombra por pantalla
-		JOptionPane.showMessageDialog(this, mensaxe, "Información das alfombras", JOptionPane.INFORMATION_MESSAGE); 
-				 
-		
-		
+
+		// Cojo los indices de las alfombras que están seleccionadas
+		int posicionsSeleccionados[] = listaAlfombras.getSelectedIndices();
+
+		String mensaxe = "";
+
+		// Recorro la lista de indices, busco en la lista Modelo la alfombra con ese
+		// indice y creo un mensaje con la info de todas
+		for (int i = 0; i < posicionsSeleccionados.length; i++) {
+
+			Alfombra alfombra = modelo.getElementAt(posicionsSeleccionados[i]);
+			mensaxe = mensaxe + "MODELO: " + alfombra.getModelo() + "\nCOR: " + alfombra.getCor() + "\nANCHO: "
+					+ alfombra.getAncho() + " cm\nALTO: " + alfombra.getAlto() + " cm\n\n";
+		}
+
+		// Mostras información das alfombra por pantalla
+		JOptionPane.showMessageDialog(this, mensaxe, "Información das alfombras", JOptionPane.INFORMATION_MESSAGE);
+
 	}
 
+	// Borrar unha alfombra seleccionada
+	private void borrarAlfombraSeleccionada() {
+
+		// Comprobamos que haya alfombras
+		if (modelo.getSize() == 0) {
+			JOptionPane.showMessageDialog(this, "Non hai alfombras dispoñibles");
+			return;
+		}
+
+		// Compruebo si hay alguna seleccionada, si no la hay, getIndex devolverá -1
+		if (listaAlfombras.getSelectedIndex() == -1) {
+			JOptionPane.showMessageDialog(this, "Debe seleccionar unha alfombra para eliminarla.");
+			return;
+		}
+
+		int[] indicesSeleccionados = listaAlfombras.getSelectedIndices();
+
+		// Bucle decrementado. Si elimino primero los indices bajos, los altos ocupan su
+		// lugar en la lista
+		if (indicesSeleccionados.length > 1) {
+			for (int i = indicesSeleccionados.length - 1; i >= 0; i--) {
+				modelo.removeElementAt(indicesSeleccionados[i]);
+			}
+		} else {
+			modelo.removeElementAt(listaAlfombras.getSelectedIndex());
+		}
+
+	}
+
+	// Borrar todas as alfombras
+	private void borrarTodasAlfombras() {
+
+		// Comprobamos que haya alfombras
+		if (modelo.getSize() == 0) {
+			JOptionPane.showMessageDialog(this, "Non hai alfombras dispoñibles");
+			return;
+		}
+
+		modelo.removeAllElements();
+	}
+
+	// Metodo que recibe todos los ActionEvents y actua según quien se los envíe
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		if(e.getSource()==btnEngadir) {
+		if (e.getSource() == btnEngadir) {
 			engadir();
 		}
-		if(e.getSource()==btnInformacion) {
+		if (e.getSource() == btnInformacion) {
 			mostrarInfo();
 		}
-		if(e.getSource()==btnEliminarUna) {
-			mostrarInfo();
+		if (e.getSource() == btnEliminarUna) {
+			borrarAlfombraSeleccionada();
 		}
-		if(e.getSource()==btnEliminarTodas) {
-			mostrarInfo();
+		if (e.getSource() == btnEliminarTodas) {
+			borrarTodasAlfombras();
 		}
 	}
 
-		 
-} 
-	
+	// Detectar clicks con la interfaz MouseListener
+	private void lstAlfombrasMouseClicked(java.awt.event.MouseEvent evt) {
+
+		// Si los clicks son 2
+		if (evt.getClickCount() == 2) {
+			// Comprobar se hai alfombras na lista
+			if (modelo.getSize() == 0) {
+				JOptionPane.showMessageDialog(this, "Non hai alfombras dispoñibles");
+				return;
+			}
+
+			// Comprobar se hai algunha alfombra seleccionada
+			if (listaAlfombras.getSelectedIndex() == -1) {
+				JOptionPane.showMessageDialog(this, "Debe seleccionar unha alfombra");
+				return;
+			}
+
+			// Recuperar a alfombra do modelo
+			Alfombra alfombra = modelo.getElementAt(listaAlfombras.getSelectedIndex());
+			// Mostras información da alfombra por pantalla
+			String mensaxe = "MODELO: " + alfombra.getModelo() + "\nCOR: " + alfombra.getCor() + "\nANCHO: "
+					+ alfombra.getAncho() + " cm\nALTO: " + alfombra.getAlto() + " cm";
+			JOptionPane.showMessageDialog(this, mensaxe);
+
+		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getSource() == listaAlfombras) {
+			lstAlfombrasMouseClicked(e);
+		}
+
+	}
+
+	// Metodos no implementados de la interfaz MouseListener
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+}
