@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JSpinner;
 import javax.swing.JList;
 import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class Tarea8JTable extends JFrame {
 
@@ -55,6 +56,8 @@ public class Tarea8JTable extends JFrame {
 	 */
 	public Tarea8JTable() {
 		
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 600, 400);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0};
@@ -126,13 +129,13 @@ public class Tarea8JTable extends JFrame {
 		pnlNovoMoble.add(lblMaterial, gbc_lblMaterial);
 		
 		combMaterial = new JComboBox();
+		combMaterial.setModel(new DefaultComboBoxModel(new String[] {"Carballo", "Cerdeira", "Faia", "Ferro", "Piñeiro", "Plástico"}));
 		GridBagConstraints gbc_combMaterial = new GridBagConstraints();
 		gbc_combMaterial.gridwidth = 5;
 		gbc_combMaterial.insets = new Insets(0, 0, 5, 5);
 		gbc_combMaterial.fill = GridBagConstraints.HORIZONTAL;
 		gbc_combMaterial.gridx = 4;
 		gbc_combMaterial.gridy = 1;
-		combMaterial.setModel(null);
 		pnlNovoMoble.add(combMaterial, gbc_combMaterial);
 		
 		JLabel lblAncho = new JLabel("Ancho");
