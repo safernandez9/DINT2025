@@ -98,4 +98,8 @@ public class DatosAcademicosJDialog extends JDialog {
 		getContentPane().add(btnAceptar, gbc_btnAceptar);
 	}
 
+	public DatosAcademicosJDialog(Tarea9JDialog tarea9jDialog, boolean b) {
+		// TODO Auto-generated constructor stub
+	}
+
 }
