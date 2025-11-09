@@ -55,17 +55,18 @@ public class Tarea11DialogosPredefinidos extends JFrame implements ActionListene
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{0, 0};
-		gbl_contentPane.rowHeights = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_contentPane.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		gbl_contentPane.columnWidths = new int[] { 0, 0 };
+		gbl_contentPane.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_contentPane.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		contentPane.setLayout(gbl_contentPane);
-		
+
 		// SECCION 1: showInputDialog
-		
-		// Botón método 1 
-		// public static void showMessageDialog(Component parentComponent, Object message)
-		btnMetodo1 = new JButton("Mostrar showMessageDialog (método 1)"); 
+
+		// Botón método 1
+		// public static void showMessageDialog(Component parentComponent, Object
+		// message)
+		btnMetodo1 = new JButton("Mostrar showMessageDialog (método 1)");
 		GridBagConstraints gbc_btnMetodo1 = new GridBagConstraints();
 		gbc_btnMetodo1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnMetodo1.insets = new Insets(0, 0, 5, 0);
@@ -73,9 +74,10 @@ public class Tarea11DialogosPredefinidos extends JFrame implements ActionListene
 		gbc_btnMetodo1.gridy = 0;
 		btnMetodo1.addActionListener(this);
 		contentPane.add(btnMetodo1, gbc_btnMetodo1);
-		
-		// Botón método 2 
-		// public static void showMessageDialog(Component parentComponent, Object message, String title, int messageType)
+
+		// Botón método 2
+		// public static void showMessageDialog(Component parentComponent, Object
+		// message, String title, int messageType)
 		btnMetodo2 = new JButton("Mostrar showMessageDialog (método 2)");
 		GridBagConstraints gbc_btnMetodo2 = new GridBagConstraints();
 		gbc_btnMetodo2.fill = GridBagConstraints.HORIZONTAL;
@@ -84,9 +86,10 @@ public class Tarea11DialogosPredefinidos extends JFrame implements ActionListene
 		gbc_btnMetodo2.gridy = 1;
 		btnMetodo2.addActionListener(this);
 		contentPane.add(btnMetodo2, gbc_btnMetodo2);
-		
-		// Botón método 3 
-		// public static void showMessageDialog(Component parentComponent, Object message, String title, int messageType, Icon icon)
+
+		// Botón método 3
+		// public static void showMessageDialog(Component parentComponent, Object
+		// message, String title, int messageType, Icon icon)
 		btnMetodo3 = new JButton("Mostrar showMessageDialog (método 3)");
 		GridBagConstraints gbc_btnMetodo3 = new GridBagConstraints();
 		gbc_btnMetodo3.insets = new Insets(0, 0, 5, 0);
@@ -96,10 +99,8 @@ public class Tarea11DialogosPredefinidos extends JFrame implements ActionListene
 		btnMetodo3.addActionListener(this);
 		contentPane.add(btnMetodo3, gbc_btnMetodo3);
 
-		
-		
 		// SECCION 2: showInputDialog. Diálogo de entrada de datos.
-		
+
 		// Botón método 1
 		// public static String showInputDialog(Object message)
 		btn2Metodo1 = new JButton("Mostrar showInputDialog (método 1)");
@@ -109,9 +110,10 @@ public class Tarea11DialogosPredefinidos extends JFrame implements ActionListene
 		gbc_btn2Metodo1.gridx = 0;
 		gbc_btn2Metodo1.gridy = 3;
 		contentPane.add(btn2Metodo1, gbc_btn2Metodo1);
-		
+
 		// Botón método 2
-		// public static String showInputDialog(Object message, Object initialSelectionValue)
+		// public static String showInputDialog(Object message, Object
+		// initialSelectionValue)
 		btn2Metodo2 = new JButton("Mostrar showInputDialog (método 2)");
 		GridBagConstraints gbc_btn2Metodo2 = new GridBagConstraints();
 		gbc_btn2Metodo2.fill = GridBagConstraints.HORIZONTAL;
@@ -119,9 +121,10 @@ public class Tarea11DialogosPredefinidos extends JFrame implements ActionListene
 		gbc_btn2Metodo2.gridx = 0;
 		gbc_btn2Metodo2.gridy = 4;
 		contentPane.add(btn2Metodo2, gbc_btn2Metodo2);
-		
+
 		// Botón método 3
-		// public static String showInputDialog(Component parentComponent, Object message)
+		// public static String showInputDialog(Component parentComponent, Object
+		// message)
 		btn2Metodo3 = new JButton("Mostrar showInputDialog (método 3)");
 		GridBagConstraints gbc_btn2Metodo3 = new GridBagConstraints();
 		gbc_btn2Metodo3.fill = GridBagConstraints.HORIZONTAL;
@@ -129,8 +132,9 @@ public class Tarea11DialogosPredefinidos extends JFrame implements ActionListene
 		gbc_btn2Metodo3.gridx = 0;
 		gbc_btn2Metodo3.gridy = 5;
 		contentPane.add(btn2Metodo3, gbc_btn2Metodo3);
-		
-		
+
+		// Botón método 4
+
 		btn2Metodo4 = new JButton("Mostrar showInputDialog (método 4)");
 		GridBagConstraints gbc_btn2Metodo4 = new GridBagConstraints();
 		gbc_btn2Metodo4.fill = GridBagConstraints.HORIZONTAL;
@@ -138,7 +142,7 @@ public class Tarea11DialogosPredefinidos extends JFrame implements ActionListene
 		gbc_btn2Metodo4.gridx = 0;
 		gbc_btn2Metodo4.gridy = 6;
 		contentPane.add(btn2Metodo4, gbc_btn2Metodo4);
-		
+
 		btn2Metodo5 = new JButton("Mostrar showInputDialog (método 5)");
 		GridBagConstraints gbc_btn2Metodo5 = new GridBagConstraints();
 		gbc_btn2Metodo5.fill = GridBagConstraints.HORIZONTAL;
@@ -146,31 +150,76 @@ public class Tarea11DialogosPredefinidos extends JFrame implements ActionListene
 		gbc_btn2Metodo5.gridx = 0;
 		gbc_btn2Metodo5.gridy = 7;
 		contentPane.add(btn2Metodo5, gbc_btn2Metodo5);
-		
+
 		btn2Metodo6 = new JButton("Mostrar showInputDialog (método 6)");
 		GridBagConstraints gbc_btn2Metodo6 = new GridBagConstraints();
 		gbc_btn2Metodo6.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btn2Metodo6.gridx = 0;
 		gbc_btn2Metodo6.gridy = 8;
 		contentPane.add(btn2Metodo6, gbc_btn2Metodo6);
-		
-		
 
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == btnMetodo1){
+		if (e.getSource() == btnMetodo1) {
 			JOptionPane.showMessageDialog(this, "O botón foi premido");
 		}
-		// El último parámetro (messageType) marcará el icono predefinido que se mostrará en el diálogo
-		if(e.getSource() == btnMetodo2){
+		// El último parámetro (messageType) marcará el icono predefinido que se
+		// mostrará en el diálogo
+		if (e.getSource() == btnMetodo2) {
 			JOptionPane.showMessageDialog(this, "O botón foi premido", "Método 2", JOptionPane.WARNING_MESSAGE);
 		}
-		if(e.getSource() == btnMetodo3){
+		// El ultimo parámetro (icon) permitirá definir un icono personalizado que se
+		// mostrará en el diálogo
+		if (e.getSource() == btnMetodo3) {
 			ImageIcon icono = Icons.convertImage("/imaxes/icona.png", 64, 64);
-			JOptionPane.showMessageDialog(this, "O botón foi premido", "Método 3",JOptionPane.WARNING_MESSAGE, icono);
+			JOptionPane.showMessageDialog(this, "O botón foi premido", "Método 3", JOptionPane.WARNING_MESSAGE, icono);
 		}
+		if (e.getSource() == btn2Metodo1) {
+			btn2Metodo1ActionPerformed(e);
+		}
+		if (e.getSource() == btn2Metodo2) {
+			String resposta = JOptionPane.showInputDialog("Introduce o teu nome:", "Nome por defecto");
+			System.out.println("O nome introducido é: " + resposta);
+		}
+		if (e.getSource() == btn2Metodo3) {
+			String resposta = JOptionPane.showInputDialog(this, "Introduce o teu nome:");
+			System.out.println("O nome introducido é: " + resposta);
+		}
+		if (e.getSource() == btn2Metodo4) {
+			String resposta = JOptionPane.showInputDialog(this, "Introduce o teu nome:", "Diálogo de entrada",
+					JOptionPane.QUESTION_MESSAGE);
+			System.out.println("O nome introducido é: " + resposta);
+		}
+		if (e.getSource() == btn2Metodo5) {
+			String resposta = JOptionPane.showInputDialog(this, "Introduce o teu nome:", "Diálogo de entrada",
+					JOptionPane.QUESTION_MESSAGE, null, null, "Nome por defecto").toString();
+			System.out.println("O nome introducido é: " + resposta);
+		}
+		if (e.getSource() == btn2Metodo6) {
+			String[] opcións = { "Opción 1", "Opción 2", "Opción 3" };
+			String resposta = JOptionPane.showInputDialog(this, "Elixe unha opción:", "Diálogo de entrada",
+					JOptionPane.QUESTION_MESSAGE, null, opcións, opcións[0]).toString();
+			System.out.println("A opción elixida é: " + resposta);
+		}
+
+	}
+
+	private void btn2Metodo1ActionPerformed(ActionEvent e) {
+		if (domicilio == null) {
+			JOptionPane.showMessageDialog(this, "Acción anulada polo usuario", "Atención", JOptionPane.ERROR_MESSAGE);
+		} else {
+			if (domicilio.trim().compareTo("") == 0) {
+				JOptionPane.showMessageDialog(this, "A caixa de texto está baleira", "Atención",
+						JOptionPane.ERROR_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(this, "O seu domicilio é " + domicilio, "Atención",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+		System.out.println(domicilio);
+
 	}
 
 }

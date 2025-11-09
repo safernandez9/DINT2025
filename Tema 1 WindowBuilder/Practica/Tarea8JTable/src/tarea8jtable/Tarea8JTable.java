@@ -27,7 +27,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
-public class Tarea8JTable extends JFrame implements ActionListener, MouseListener {
+public class Tarea8JTable extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -337,6 +337,11 @@ public class Tarea8JTable extends JFrame implements ActionListener, MouseListene
 	 */
 	private void engadirMoble() {
 
+		if (tfNome.getText().isEmpty() || tfCor.getText().isEmpty() || tfAncho.getText().isEmpty()
+				|| tfAlto.getText().isEmpty() || tfFondo.getText().isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Debe cubrir todos os campos");
+			return;
+		}
 		// Recuperar os datos dos campos de texto
 		String nome = tfNome.getText();
 		String cor = tfCor.getText();
