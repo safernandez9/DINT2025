@@ -4,9 +4,14 @@ import java.awt.Frame;
 import java.util.Vector;
 
 public class GestorVentanas {
-	
+
+	// VECTOR PARA IR GUARDANDO LAS REFERENCIAS A LAS VENTANAS DATOSPERSOAIS CREADAS
 	static private Vector ventanasDatosPersoais = new Vector();
-	
+
+	// VENTOR PARA IR GUARDANDO LAS REFERENCIAS A LAS VENTANAS DATOSACADEMICOS
+	// CREADAS
+	static private Vector ventanasDatosAcademicos = new Vector();
+
 	// METODOS DE CONTEO DE VENTANAS ABIERTAS
 	// Se llaman al abrir (pulsar el boton) y cerrar (WindowEvent) las ventanas
 
@@ -18,8 +23,10 @@ public class GestorVentanas {
 		numVentanasDatosPersoais--;
 	}
 
-	/** Se llama cada vez que se pulsa el boton datosPersoais
-	 * Devuelve true o false en función del límite de ventanas abiertas que quiera
+	/**
+	 * Se llama cada vez que se pulsa el boton datosPersoais Devuelve true o false
+	 * en función del límite de ventanas abiertas que quiera
+	 * 
 	 * @return
 	 */
 	public static boolean abrirVentanasDatosPersoais() {
@@ -35,8 +42,10 @@ public class GestorVentanas {
 		numVentanasDatosAcademicos--;
 	}
 
-	/** Se llama cada vez que se pulsa el boton datosAcademicos
-	 * Devuelve true si no hay ninguna y false si ya hay ventanas abiertas
+	/**
+	 * Se llama cada vez que se pulsa el boton datosAcademicos Devuelve true si no
+	 * hay ninguna y false si ya hay ventanas abiertas
+	 * 
 	 * @return
 	 */
 	public static boolean abrirVentanasDatosAcademicos() {
@@ -48,10 +57,10 @@ public class GestorVentanas {
 		}
 
 	}
-	
-	
-	// METODOS PARA IR GUARDANDO LAS REFERENCIAS A LAS VENTANAS DATOSPERSOAIS CREADAS
-	// Se llaman al abrir (pulsar el boton) y cerrar (WindowEvent) las ventanas
+
+	// Los siguientes metodos se llamaran cuando se abra o cierre una ventana
+
+	// Metodos de manejo del Vector de ventanas DatosPersoais
 
 	public static void añadirVentanaDatosPersoais(DatosPersoaisJDialog xanela) {
 		ventanasDatosPersoais.add(xanela);
@@ -70,5 +79,25 @@ public class GestorVentanas {
 	public static Vector getVentanasDatosPersoais() {
 		return ventanasDatosPersoais;
 	}
-	
+
+	// Metodos de manejo del Vector de ventanas DatosAcademicos
+
+	public static void añadirVentanaDatosAcademicos(DatosAcademicosJDialog xanela) {
+		ventanasDatosAcademicos.add(xanela);
+	}
+
+	public static void eliminarVentanaDatosAcademicos(DatosAcademicosJDialog xanela) {
+		for (int i = 0; i < ventanasDatosAcademicos.size(); i++) {
+			if (ventanasDatosAcademicos.elementAt(i) == xanela) {
+				ventanasDatosAcademicos.removeElementAt(i);
+				break;
+			}
+		}
+		System.out.println(ventanasDatosAcademicos.size());
+	}
+
+	public static Vector getVentanasDatosAcademicos() {
+		return ventanasDatosAcademicos;
+	}
+
 }

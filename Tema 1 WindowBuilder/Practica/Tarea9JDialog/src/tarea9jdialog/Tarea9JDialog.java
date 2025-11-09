@@ -15,6 +15,16 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.Vector;
+
+/**
+ * Clase principal que crea la ventana principal con los botones para abrir las
+ * demás ventanas.
+ * 
+ * Además gestiona los mensajes de error de esta pantalla y de los JDialog secundarios.
+ * 
+ *
+ */
 
 public class Tarea9JDialog extends JFrame implements ActionListener {
 
@@ -97,7 +107,8 @@ public class Tarea9JDialog extends JFrame implements ActionListener {
 	}
 
 	/**
-	 * instanciar un obxecto da clase DlgDatosPersoais empregando o seu construtor.
+	 * Instanciar un obxecto da clase DlgDatosPersoais empregando o seu construtor.
+	 * 
 	 * O construtor ten dous parámetros. O primeiro parámetro emprégase para indicar
 	 * quen é a xanela pai da que estamos creando (neste caso é o propio chamador, é
 	 * dicir, this). O segundo parámetro indica se a xanela aberta será amosada en
@@ -106,33 +117,107 @@ public class Tarea9JDialog extends JFrame implements ActionListener {
 	 * setvisible
 	 */
 
-	// LLAMO A METODOS ABRIR VENTANAS
+	/**
+	 * Gestor de botones
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnDatosPersoais) {
-			if (GestorVentanas.abrirVentanasDatosPersoais()) {
-				DatosPersoaisJDialog dlgDatosPersoais = new DatosPersoaisJDialog(this, false);
-				GestorVentanas.añadirVentanaDatosPersoais(dlgDatosPersoais);
-				dlgDatosPersoais.setVisible(true);
-			} else {
-				JOptionPane.showMessageDialog(this, "Non é posible abrir máis xanelas deste tipo");
-				return;
-			}
+			btnDatosPersoaisActionPerformed(e);
 		} else if (e.getSource() == btnDatosAcademicos) {
-			if (GestorVentanas.abrirVentanasDatosAcademicos()) {
-				DatosAcademicosJDialog dlgDatosAcademicos = new DatosAcademicosJDialog(this, false);
-				dlgDatosAcademicos.setVisible(true);
-			} else {
-				JOptionPane.showMessageDialog(this, "Non é posible abrir máis xanelas deste tipo");
-				return;
-			}
-
+			btnDatosAcademicosActionPerformed(e);
 		} else if (e.getSource() == btnCascada) {
-
+			btnGenerarCascadaActionPerformed();
 		} else if (e.getSource() == btnSair) {
+			System.exit(0);
+		}
+	}
+
+
+	/**
+	 * Código al pulsar Datos Persoais Llama al gestor de ventanas para comprobar si
+	 * se puede abrir otra ventana e incrementar el contador si puede abrirla, la
+	 * crea y la muestra.
+	 * 
+	 * @param e
+	 */
+	private void btnDatosPersoaisActionPerformed(ActionEvent e) {
+		if (GestorVentanas.abrirVentanasDatosPersoais()) {
+			DatosPersoaisJDialog dlgDatosPersoais = new DatosPersoaisJDialog(this, false);
+			GestorVentanas.añadirVentanaDatosPersoais(dlgDatosPersoais);
+			dlgDatosPersoais.setVisible(true);
+		} else {
+			JOptionPane.showMessageDialog(this, "Non é posible abrir máis xanelas deste tipo");
 			return;
 		}
+	}
 
+	/**
+	 * Código al pulsar Datos Académicos Llama al gestor de ventanas para comprobar
+	 * si se puede abrir otra ventana e incrementar el contador si puede abrirla, la
+	 * crea y la muestra.
+	 * 
+	 * @param e
+	 */
+	private void btnDatosAcademicosActionPerformed(ActionEvent e) {
+		if (GestorVentanas.abrirVentanasDatosAcademicos()) {
+			DatosAcademicosJDialog dlgDatosAcademicos = new DatosAcademicosJDialog(this, false);
+			GestorVentanas.añadirVentanaDatosAcademicos(dlgDatosAcademicos);
+			dlgDatosAcademicos.setVisible(true);
+		} else {
+			JOptionPane.showMessageDialog(this, "Non é posible abrir máis xanelas deste tipo");
+			return;
+		}
+	}
+
+	/**
+	 * Código al pulsar Cascada Organiza en cascada las ventanas de Datos Persoais
+	 * abiertas
+	 */
+	private void btnGenerarCascadaActionPerformed() {
+		Vector xanelasDatosPersoais = GestorVentanas.getVentanasDatosPersoais();
+		int posX = 10, posY = 10, incremento = 50;
+		for (int i = 0; i < xanelasDatosPersoais.size(); i++) {
+			DatosPersoaisJDialog xanela = (DatosPersoaisJDialog) xanelasDatosPersoais.elementAt(i);
+			xanela.setLocation(posX, posY);
+			posX += incremento;
+			posY += incremento;
+
+		}
+	}
+
+	/**
+	 * Gestiona los mensajes de error del JDialog de Datos Persoais
+	 * @param numErro
+	 */
+	public void gestionMensajesError(int numErro) {
+		switch (numErro) {
+		case 1:
+			JOptionPane.showMessageDialog(this, "O nome non pode estar baleiro");
+			break;
+		case 2:
+			JOptionPane.showMessageDialog(this, "Os apelidos non poden estar baleiros");
+			break;
+		}
+
+	}
+
+	// Gestiona los mensajes del JDialog de Datos Academicos al pulsar Aceptar
+	public void gestionDeMensajesDeGradoAlcanzado(int grao) {
+		switch (grao) {
+		case 1:
+			JOptionPane.showMessageDialog(this, "O máximo grao que acadou vostede e ESO");
+			break;
+		case 2:
+			JOptionPane.showMessageDialog(this, "O máximo grao que acadou vostede e Bachalerato");
+			break;
+		case 3:
+			JOptionPane.showMessageDialog(this, "O máximo grao que acadou vostede e FP");
+			break;
+		case 4:
+			JOptionPane.showMessageDialog(this, "O máximo grao que acadou vostede e Universidade");
+			break;
+		}
 	}
 
 }
