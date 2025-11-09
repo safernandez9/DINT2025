@@ -27,7 +27,7 @@ import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.border.TitledBorder;
 
-import tarea7jcombobox.LimiteLonxitudeJTextField;
+import t6JList.LimiteLonxitudeJTextField;
 
 import javax.swing.JScrollPane;
 
