@@ -18,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.JTextField;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class DatosPersoaisJDialog extends JDialog implements ActionListener {
 
@@ -39,6 +41,13 @@ public class DatosPersoaisJDialog extends JDialog implements ActionListener {
 	 */
 	public DatosPersoaisJDialog(Frame padre, boolean modal) {
 		super(padre, modal);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				GestorVentanas.eliminarVentanaDatosPersoais((DatosPersoaisJDialog) e.getWindow());
+				GestorVentanas.cerrarVentanasDatosPersoais();
+			}
+		});
 		xanelaPai = (Tarea9JDialog) padre;
 		this.crearVentana();
 	}
@@ -95,12 +104,7 @@ public class DatosPersoaisJDialog extends JDialog implements ActionListener {
 		btnAceptar.addActionListener(this);
 
 	}
-
-	private void formWindowClosed(java.awt.event.WindowEvent evt) {
-		GestorVentanas.eliminarVentanaDatosPersoais(this);
-		GestorVentanas.cerrarVentanasDatosPersoais();
-	}
-
+	
 	/**
 	 * Gestor de botones
 	 */
