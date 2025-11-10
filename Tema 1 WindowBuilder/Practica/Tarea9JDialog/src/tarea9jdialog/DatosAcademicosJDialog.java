@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JRadioButton;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class DatosAcademicosJDialog extends JDialog implements ActionListener {
 
@@ -30,6 +32,16 @@ public class DatosAcademicosJDialog extends JDialog implements ActionListener {
 
 	public DatosAcademicosJDialog(Frame padre, boolean modal) {
 		super(padre, modal);
+		
+		// Añadir acción cuando se cierre una ventana
+		
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				GestorVentanas.eliminarVentanaDatosAcademicos((DatosAcademicosJDialog)e.getWindow());
+				GestorVentanas.cerrarVentanasDatosAcademicos();
+			}
+		});
 		xanelaPai = (Tarea9JDialog) padre;
 		this.crearVentana();
 	}
@@ -102,11 +114,6 @@ public class DatosAcademicosJDialog extends JDialog implements ActionListener {
 		getContentPane().add(btnAceptar, gbc_btnAceptar);
 	}
 
-	private void formWindowClosed(java.awt.event.WindowEvent evt) {
-		// TODO add your handling code here:
-		GestorVentanas.eliminarVentanaDatosAcademicos(this);
-		GestorVentanas.cerrarVentanasDatosAcademicos();
-	}
 
 	/**
 	 * Gestor de botones
