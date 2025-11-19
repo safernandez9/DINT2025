@@ -32,7 +32,6 @@ public class Tarea8JTable extends JFrame implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTable table;
-	private DefaultTableModel modelo;
 	private JTextField tfCor;
 	private JTextField tfNome;
 	private JTextField tfAlto;
