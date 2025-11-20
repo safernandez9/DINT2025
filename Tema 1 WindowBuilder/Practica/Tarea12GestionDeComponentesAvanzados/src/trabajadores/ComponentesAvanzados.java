@@ -544,5 +544,5 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 	private void añadirTrabajador() {
 		
 	}
-
+	
 }
