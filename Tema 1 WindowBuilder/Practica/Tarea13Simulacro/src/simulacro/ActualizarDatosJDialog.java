@@ -13,44 +13,55 @@ import javax.swing.border.EmptyBorder;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
-public class ActualizarDatosJDialog extends JDialog {
+public class ActualizarDatosJDialog extends JDialog implements ActionListener, ItemListener{
 
 	private static final long serialVersionUID = 1L;
 	private final JPanel contentPanel = new JPanel();
 	private JTextField tfDNI;
 	private JTextField tfNombre;
 	private JTextField tfApellidos;
-	private JTextField textField;
+	private JTextField tfDatosAlumno;
+	private JComboBox cbParametros;
+	private JButton btnAplicarCambio;
+	private JButton btnDescartar;
 	private Simulacro padre;
 	private String dni;
 	private String nombre;
 	private String apellidos;
+	private int filaElemento;
 	
 	
-
 	
-	public ActualizarDatosJDialog(Frame padre, boolean modal, String dni, String nombre, String apellidos) {
+// PARAMETROS POR EL CONSTRUCTOR CREADO POR MI
+	
+	public ActualizarDatosJDialog(Frame padre, boolean modal, String dni, String nombre, String apellidos, int filaElemento) {
 		super(padre, modal);
 		this.padre = (Simulacro) padre;
 		this.dni = dni;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
+		this.filaElemento = filaElemento;
 		this.crearVentana();
 	}
 
 
-	/**
-	 * Create the dialog.
-	 */
+	// CONVIERTO LA CREACION A UN METODO
+	
 	private void crearVentana() {
 		setBounds(100, 100, 533, 373);
 		getContentPane().setLayout(new BorderLayout());
@@ -157,21 +168,36 @@ public class ActualizarDatosJDialog extends JDialog {
 		gbc_scrollPane.gridy = 0;
 		pnlInteraccion.add(scrollPane, gbc_scrollPane);
 		
-		JComboBox comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Nombre", "Apellidos"}));
-		scrollPane.setViewportView(comboBox);
+		// COMBOBOX
 		
-		textField = new JTextField();
+		cbParametros = new JComboBox();
+		cbParametros.setModel(new DefaultComboBoxModel(new String[] {"Nombre", "Apellidos"}));
+		scrollPane.setViewportView(cbParametros);
+		cbParametros.setSelectedIndex(-1);
+		cbParametros.addItemListener(this);
+		
+		
+		
+		tfDatosAlumno = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
 		gbc_textField.insets = new Insets(0, 20, 5, 20);
 		gbc_textField.fill = GridBagConstraints.BOTH;
 		gbc_textField.gridx = 0;
 		gbc_textField.gridy = 1;
-		pnlInteraccion.add(textField, gbc_textField);
-		textField.setColumns(10);
+		pnlInteraccion.add(tfDatosAlumno, gbc_textField);
+		tfDatosAlumno.setColumns(10);
+		tfDatosAlumno.getDocument().addDocumentListener(new DocumentListener() {
+		    void actualizar() { actualizarBotones();}
+		    public void insertUpdate(DocumentEvent e) { actualizar(); }
+		    public void removeUpdate(DocumentEvent e) { actualizar(); }
+		    
+		    public void changedUpdate(DocumentEvent e) { actualizar(); }
+		});
+
 		
-		JButton btnAplicarCambio = new JButton("Aplicar cambio");
+		btnAplicarCambio = new JButton("Aplicar cambio");
 		btnAplicarCambio.setEnabled(false);
+		btnAplicarCambio.addActionListener(this);
 		GridBagConstraints gbc_btnAplicarCambio = new GridBagConstraints();
 		gbc_btnAplicarCambio.fill = GridBagConstraints.BOTH;
 		gbc_btnAplicarCambio.insets = new Insets(0, 20, 5, 20);
@@ -179,14 +205,123 @@ public class ActualizarDatosJDialog extends JDialog {
 		gbc_btnAplicarCambio.gridy = 2;
 		pnlInteraccion.add(btnAplicarCambio, gbc_btnAplicarCambio);
 		
-		JButton btnDescartar = new JButton("Descartar cambio");
+		btnDescartar = new JButton("Descartar cambio");
 		btnDescartar.setEnabled(false);
+		btnDescartar.addActionListener(this);
 		GridBagConstraints gbc_btnDescartar = new GridBagConstraints();
 		gbc_btnDescartar.insets = new Insets(0, 20, 0, 20);
 		gbc_btnDescartar.fill = GridBagConstraints.BOTH;
 		gbc_btnDescartar.gridx = 0;
 		gbc_btnDescartar.gridy = 3;
 		pnlInteraccion.add(btnDescartar, gbc_btnDescartar);
+	}
+
+
+	// Actualiza los botones si se cambia el dato
+	protected void actualizarBotones() {
+		if (cbParametros.getSelectedIndex() == 0) {
+			if (!tfNombreCoincide() && !tfDatosAlumnoVacio()) {
+				activarBotones();
+			} else {
+				desactivarBotones();
+			}
+		} else if (cbParametros.getSelectedIndex() == 1) {
+			if (!tfApellidosCoincide() && !tfDatosAlumnoVacio()) {
+				activarBotones();
+			} else {
+				desactivarBotones();
+			}
+		}
+	}
+
+	private boolean tfNombreCoincide() {
+		return tfDatosAlumno.getText().toLowerCase().equals(this.nombre.toLowerCase());
+	}
+	
+	private boolean tfApellidosCoincide() {
+		return tfDatosAlumno.getText().toLowerCase().equals(this.apellidos.toLowerCase());
+	}
+
+
+	private boolean tfDatosAlumnoVacio() {
+		return(tfDatosAlumno.getText().trim().isEmpty());
+	}
+
+	private void activarBotones() {
+		btnDescartar.setEnabled(true);
+		btnAplicarCambio.setEnabled(true);
+	}
+
+	private void desactivarBotones() {
+		btnDescartar.setEnabled(false);
+		btnAplicarCambio.setEnabled(false);
+	}
+
+	@Override
+	/**
+	 *  Listener comboBox
+	 */
+	public void itemStateChanged(ItemEvent e) {
+		if(e.getSource() == cbParametros) {
+			actualizarTextFieldPnlDatos();
+		}
+		
+	}
+
+	@Override
+	/**
+	 * Listener botones
+	 */
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnAplicarCambio) {
+			aplicarCambiosYDevolver();
+		}
+		if (e.getSource() == btnDescartar) {
+			actualizarTextFieldPnlDatos();
+
+		}
+	}
+
+
+	/**
+	 * Aplica los cambios a la etiqueta de esta ventana y a la tabla de la otra
+	 */
+	private void aplicarCambiosYDevolver() {
+		int tipoDato = -1;
+		String datoEnviado = null;
+		if (cbParametros.getSelectedIndex() == 0) {
+			this.nombre = tfDatosAlumno.getText().trim().toUpperCase();
+			tfNombre.setText(this.nombre);
+			tipoDato = 1;
+			datoEnviado = this.nombre;
+		} else if (cbParametros.getSelectedIndex() == 1) {
+			this.apellidos = tfDatosAlumno.getText().trim().toUpperCase();
+			tfApellidos.setText(this.apellidos);
+			tipoDato = 2;
+			datoEnviado = this.apellidos;
+		}
+		btnDescartar.setEnabled(false);
+		btnAplicarCambio.setEnabled(false);
+		
+		// Actualizo a la ventana padre usando su metodo actualizarTabla
+		if(tipoDato != -1) {
+			((Simulacro) getParent()).actualizarTabla(datoEnviado, filaElemento, tipoDato);
+		}
+		
+
+		
+	}
+	
+	/**
+	 * Actualiza el textField del Panel inferior según lo que esté seleccionado en el combobox
+	 */
+	private void actualizarTextFieldPnlDatos() {
+		if(cbParametros.getSelectedIndex() == 0) {
+			tfDatosAlumno.setText(this.nombre);
+		}
+		else if(cbParametros.getSelectedIndex() == 1) {
+			tfDatosAlumno.setText(this.apellidos);
+		}
 	}
 
 }

@@ -104,6 +104,7 @@ public class T6JList extends JFrame implements ActionListener, MouseListener {
 
 		// FORMULARIO
 
+		
 		lblModelo = new JLabel("Modelo");
 		GridBagConstraints gbc_lblModelo = new GridBagConstraints();
 		gbc_lblModelo.insets = new Insets(0, 0, 5, 5);
@@ -197,6 +198,8 @@ public class T6JList extends JFrame implements ActionListener, MouseListener {
 		btnEngadir.addActionListener(this);
 		pnlDatos.add(btnEngadir, gbc_btnEngadir);
 
+		
+		
 		// PANEL INFERIOR
 
 		JPanel pnlLista = new JPanel();
@@ -221,7 +224,9 @@ public class T6JList extends JFrame implements ActionListener, MouseListener {
 		pnlInferior.add(scrollPane);
 
 		listaAlfombras = new JList();
+		
 		// Asocio lista grafica a modelo de datos (DefaultListModel<Alfombra>)
+		
 		listaAlfombras.setModel(modelo);
 		listaAlfombras.addMouseListener(this);
 		scrollPane.setViewportView(listaAlfombras);
@@ -264,7 +269,11 @@ public class T6JList extends JFrame implements ActionListener, MouseListener {
 
 	}
 
+	
+	// Creo objeto de la lista y lo añado al modelo
+	
 	private void engadir() {
+		
 		if (!tfModelo.getText().trim().isEmpty() && !tfCor.getText().trim().isEmpty()
 				&& !tfAncho.getText().trim().isEmpty() && !tfAlto.getText().trim().isEmpty()) {
 			Alfombra a = new Alfombra(tfModelo.getText(), tfCor.getText(), Integer.parseInt(tfAncho.getText()),
@@ -286,6 +295,7 @@ public class T6JList extends JFrame implements ActionListener, MouseListener {
 	}
 
 	// Mostrar información das alfombras seleccionadas
+	// Para seleccionar solo una: listaAlfombras.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); El resto del código igual
 	private void mostrarInfo() {
 
 		// Comprobamos que haya alfombras
@@ -301,6 +311,7 @@ public class T6JList extends JFrame implements ActionListener, MouseListener {
 		}
 
 		// Cojo los indices de las alfombras que están seleccionadas
+		
 		int posicionsSeleccionados[] = listaAlfombras.getSelectedIndices();
 
 		String mensaxe = "";
@@ -379,6 +390,7 @@ public class T6JList extends JFrame implements ActionListener, MouseListener {
 	}
 
 	// Detectar clicks con la interfaz MouseListener
+	
 	private void lstAlfombrasMouseClicked(java.awt.event.MouseEvent evt) {
 
 		// Si los clicks son 2

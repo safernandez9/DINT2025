@@ -16,14 +16,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import javax.swing.JScrollPane;
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JTable;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.JMenuItem;
 
 public class Simulacro extends JFrame implements ActionListener {
@@ -43,7 +49,8 @@ public class Simulacro extends JFrame implements ActionListener {
 	private JMenuItem mntmAñadirAlumno;
 	private JMenuItem mntmEliminar;
 	private JMenuItem mntmActualizar;
-
+	private Alumno alumnoDefault = new Alumno("77013586H", "NOMBRE", "APELLIDOS");
+	
 	/**
 	 * Launch the application.
 	 */
@@ -54,7 +61,7 @@ public class Simulacro extends JFrame implements ActionListener {
 					Simulacro frame = new Simulacro();
 					frame.setVisible(true);
 					frame.setTitle("Gestión alumnos");
-					// frame.setMinimumSize();
+					frame.setMinimumSize(frame.getSize());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -69,7 +76,7 @@ public class Simulacro extends JFrame implements ActionListener {
 	 */
 	public Simulacro() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 686, 742);
+		setBounds(100, 100, 524, 632);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -81,16 +88,45 @@ public class Simulacro extends JFrame implements ActionListener {
 		mnAlumnos.add(mntmAñadirAlumno);
 		mntmAñadirAlumno.addActionListener(this);
 
+		// --- ATAJOS DE TECLADO
+
+		KeyStroke ks = KeyStroke.getKeyStroke("control 1");
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(ks, "accionAñadir");
+		getRootPane().getActionMap().put("accionAñadir", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mntmAñadirAlumno.doClick();
+			}
+		});
+
 		mnResultados = new JMenu("Resultados");
 		menuBar.add(mnResultados);
 
 		mntmActualizar = new JMenuItem("Actualizar  Ctrl+2");
 		mnResultados.add(mntmActualizar);
 		mntmActualizar.addActionListener(this);
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control 2"),
+				"accionActualizar");
+
+		getRootPane().getActionMap().put("accionActualizar", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mntmActualizar.doClick();
+			}
+		});
 
 		mntmEliminar = new JMenuItem("Eliminar Ctrl+3");
 		mnResultados.add(mntmEliminar);
 		mntmEliminar.addActionListener(this);
+		getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control 3"),
+				"accionEliminar");
+
+		getRootPane().getActionMap().put("accionEliminar", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mntmEliminar.doClick();
+			}
+		});
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -99,7 +135,7 @@ public class Simulacro extends JFrame implements ActionListener {
 		gbl_contentPane.columnWidths = new int[] { 0, 0 };
 		gbl_contentPane.rowHeights = new int[] { 0, 0, 0 };
 		gbl_contentPane.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 
 		JPanel pnlGestionAlumnos = new JPanel();
@@ -115,7 +151,7 @@ public class Simulacro extends JFrame implements ActionListener {
 		gbl_pnlGestionAlumnos.columnWidths = new int[] { 0, 0, 0 };
 		gbl_pnlGestionAlumnos.rowHeights = new int[] { 0, 0, 0, 0, 0 };
 		gbl_pnlGestionAlumnos.columnWeights = new double[] { 0.0, 1.0, Double.MIN_VALUE };
-		gbl_pnlGestionAlumnos.rowWeights = new double[] { 1.0, 1.0, 1.0, 1.0, Double.MIN_VALUE };
+		gbl_pnlGestionAlumnos.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		pnlGestionAlumnos.setLayout(gbl_pnlGestionAlumnos);
 
 		JLabel lblDNI = new JLabel("DNI");
@@ -203,6 +239,9 @@ public class Simulacro extends JFrame implements ActionListener {
 		gbc_scrollPane.gridy = 0;
 		pnlResultados.add(scrollPane, gbc_scrollPane);
 
+		
+		// TABLA
+		
 		tbAlumnos = new JTable();
 		tbAlumnos.setModel(new DefaultTableModel(new Object[][] {}, new String[] { "DNI", "Nombre", "Apellidos" }) {
 			boolean[] columnEditables = new boolean[] { false, false, false };
@@ -211,9 +250,20 @@ public class Simulacro extends JFrame implements ActionListener {
 				return columnEditables[column];
 			}
 		});
-		scrollPane.setViewportView(tbAlumnos);
-
 		modelo = (DefaultTableModel) tbAlumnos.getModel();
+		
+		// Añadir un default para pruebas
+		modelo.addRow(new Object[]{alumnoDefault.getDNI(), alumnoDefault.getNombre(), alumnoDefault.getApellidos()});
+		
+		
+		// Centrar Nombres de las columnas de la tabla y permitir seleccion solo de una fila
+		
+		((DefaultTableCellRenderer) tbAlumnos.getTableHeader().getDefaultRenderer()).setHorizontalAlignment(SwingConstants.CENTER);
+		tbAlumnos.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		scrollPane.setViewportView(tbAlumnos);
+		
+
+		
 
 		btnActualizar = new JButton("Actualizar");
 		btnActualizar.addActionListener(this);
@@ -234,6 +284,8 @@ public class Simulacro extends JFrame implements ActionListener {
 
 	}
 
+	// LEER DE TABLA
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnAñadirAlumno || e.getSource() == mntmAñadirAlumno) {
@@ -246,25 +298,32 @@ public class Simulacro extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(this, "No hay ningún elemento seleccionado", "Error",
 						JOptionPane.WARNING_MESSAGE);
 			} else {
-
-				Alumno alumno = (Alumno) modelo.getValueAt(tbAlumnos.getSelectedRow(), 0);
-				ActualizarDatosJDialog dlgActualizarDatos = new ActualizarDatosJDialog(this, false, alumno.getDNI(), alumno.getNombre(), alumno.getApellidos());
-				
+				Alumno a = leerAlumnoTabla();
+				ActualizarDatosJDialog dlgActualizarDatos = new ActualizarDatosJDialog(this, true, a.getDNI(),
+						a.getNombre(), a.getApellidos(), tbAlumnos.getSelectedRow());
 				dlgActualizarDatos.setVisible(true);
 			}
+		}
+		if (e.getSource() == btnEliminar || e.getSource() == mntmEliminar) {
+			if (tbAlumnos.getSelectedRow() == -1) {
+				JOptionPane.showMessageDialog(this, "No hay ningún elemento seleccionado", "Error",
+						JOptionPane.WARNING_MESSAGE);
+			} else {
 
-			if (e.getSource() == btnEliminar || e.getSource() == mntmEliminar) {
-				if (tbAlumnos.getSelectedRow() == -1) {
-					JOptionPane.showMessageDialog(this, "No hay ningún elemento seleccionado", "Error",
-							JOptionPane.WARNING_MESSAGE);
-				} else {
-					modelo.removeRow(tbAlumnos.getSelectedRow());
-					JOptionPane.showMessageDialog(this, "Alumno eliminado correctamente");
-				}
-
+				modelo.removeRow(tbAlumnos.getSelectedRow());
+				JOptionPane.showMessageDialog(this, "Alumno eliminado correctamente");
 			}
 
 		}
+
+	}
+	
+
+	private Alumno leerAlumnoTabla() {
+		String dni = (String) modelo.getValueAt(tbAlumnos.getSelectedRow(), 0);
+		String nom = (String) modelo.getValueAt(tbAlumnos.getSelectedRow(), 1);
+		String ape = (String) modelo.getValueAt(tbAlumnos.getSelectedRow(), 2);
+		return new Alumno(dni, nom, ape);
 	}
 
 	/**
@@ -280,7 +339,7 @@ public class Simulacro extends JFrame implements ActionListener {
 		boolean valido = true;
 		StringBuilder sb = new StringBuilder();
 
-		if (tfDNI.getText().isEmpty() || tfNombre.getText().isEmpty() || tfApellidos.getText().isEmpty()) {
+		if (tfDNI.getText().trim().isEmpty() || tfNombre.getText().trim().isEmpty() || tfApellidos.getText().trim().isEmpty()) {
 			sb.append("\nTodos los campos de texto deben estar cubiertos");
 			valido = false;
 		}
@@ -289,7 +348,7 @@ public class Simulacro extends JFrame implements ActionListener {
 			valido = false;
 		}
 		if (comprobarRepetido()) {
-			sb.append("\nEl alumno con DNI" + tfDNI.getText() + "ya ha sido añadido previamente");
+			sb.append("\nEl alumno con DNI" + tfDNI.getText() + " ya ha sido añadido previamente");
 			valido = false;
 		}
 
@@ -301,7 +360,6 @@ public class Simulacro extends JFrame implements ActionListener {
 
 	}
 
-	// RETOCAR
 	/**
 	 * Comprueba si un dni está en la tabla
 	 * 
@@ -311,7 +369,7 @@ public class Simulacro extends JFrame implements ActionListener {
 
 		for (int i = 0; i < modelo.getRowCount(); i++) {
 			String dni = modelo.getValueAt(i, 0).toString();
-			if (dni == tfDNI.getText().toUpperCase()) {
+			if (dni.equals(tfDNI.getText().toUpperCase())) {
 				return true;
 			}
 		}
@@ -333,6 +391,8 @@ public class Simulacro extends JFrame implements ActionListener {
 		Alumno alumno = new Alumno(dni, nombre, apellidos);
 
 		// Añadir alumno a la tabla
+		//  o bien, modelo.addRow(new Object[]{a.getNombre(), a.getDni(), a.getEdad()});
+		
 		modelo.setRowCount(modelo.getRowCount() + 1);
 		modelo.setValueAt(alumno.getDNI().toUpperCase(), modelo.getRowCount() - 1, 0);
 		modelo.setValueAt(alumno.getNombre(), modelo.getRowCount() - 1, 1);
@@ -340,4 +400,10 @@ public class Simulacro extends JFrame implements ActionListener {
 
 	}
 
+	public void actualizarTabla(String dato, int fila, int tipoDato) {
+		
+		int columna = tipoDato;
+		
+			modelo.setValueAt(dato, fila, columna);
+	}
 }

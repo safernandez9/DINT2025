@@ -86,6 +86,9 @@ public class Tarea7ComboBox2 extends JFrame implements ItemListener {
 		gbc_lblProvincia.gridy = 0;
 		contentPane.add(lblProvincia, gbc_lblProvincia);
 
+		
+		// CARGAR UN COMBOBOX CON UN ARRAY DE ARRAYS y añadirle un Listener de Items al Combobox 
+		
 		combProvincias = new JComboBox();
 		combProvincias.setModel(new DefaultComboBoxModel(new String[] {"A Coruña", "Lugo", "Ourense", "Pontevedra"}));
 		GridBagConstraints gbc_combProvincia = new GridBagConstraints();
@@ -96,6 +99,8 @@ public class Tarea7ComboBox2 extends JFrame implements ItemListener {
 		combProvincias.addItemListener(this);
 		contentPane.add(combProvincias, gbc_combProvincia);
 
+		
+		
 		JLabel lblConcello = new JLabel("Concello");
 		GridBagConstraints gbc_lblConcello = new GridBagConstraints();
 		gbc_lblConcello.anchor = GridBagConstraints.WEST;

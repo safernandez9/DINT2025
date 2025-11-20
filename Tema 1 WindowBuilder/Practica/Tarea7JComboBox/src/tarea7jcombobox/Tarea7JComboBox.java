@@ -242,6 +242,7 @@ public class Tarea7JComboBox extends JFrame implements ActionListener {
 		pnlInferior.add(scpAlfombras, gbc_scpAlfombras);
 
 		// Le adjunto al JComboBox el modelo de datos
+		
 		comboBoxAlfombras = new JComboBox();
 		comboBoxAlfombras.setModel(modeloAlfombras);
 		scpAlfombras.setViewportView(comboBoxAlfombras);
