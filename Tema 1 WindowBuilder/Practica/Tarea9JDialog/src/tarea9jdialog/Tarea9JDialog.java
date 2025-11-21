@@ -6,6 +6,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import examen.GestorVentanas;
+
 import java.awt.FlowLayout;
 import javax.swing.JButton;
 import java.awt.GridLayout;

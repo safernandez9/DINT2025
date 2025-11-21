@@ -8,6 +8,9 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import examen.GestorVentanas;
+
 import javax.swing.SwingConstants;
 import java.awt.GridBagLayout;
 import javax.swing.JLabel;

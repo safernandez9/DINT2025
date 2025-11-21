@@ -14,12 +14,15 @@ import java.awt.event.ActionListener;
 import javax.swing.border.TitledBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
+import java.awt.Dialog;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.JScrollPane;
@@ -65,6 +68,8 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 	private JMenuItem mntmCerrarSesion;
 	private JMenuItem mntmSalirAplicacion;
 
+	
+	private DefaultComboBoxModel<String> modeloProvincias = new DefaultComboBoxModel();
 	/**
 	 * Launch the application.
 	 */
@@ -294,6 +299,8 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 
 		combProvincia = new JComboBox();
 		GridBagConstraints gbc_combProvincia = new GridBagConstraints();
+		combProvincia.setModel(modeloProvincias);
+		combProvincia.setSelectedIndex(-1);
 		gbc_combProvincia.insets = new Insets(0, 0, 5, 5);
 		gbc_combProvincia.fill = GridBagConstraints.HORIZONTAL;
 		gbc_combProvincia.gridx = 0;
@@ -301,6 +308,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 		pnlProvincia.add(combProvincia, gbc_combProvincia);
 
 		btnEliminarProvincia = new JButton("Eliminar provincia");
+		btnEliminarProvincia.setEnabled(false);
 		GridBagConstraints gbc_btnEliminarProvincia = new GridBagConstraints();
 		gbc_btnEliminarProvincia.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnEliminarProvincia.insets = new Insets(0, 0, 5, 0);
@@ -467,34 +475,31 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object src = e.getSource();
-		ResultadoFormulario resultadoFormulario;
+		ResultadoFormulario resultadoFormulario = comprobacionesAñadirTrabajador();;
+		
+		if (src == btnAñadirTrabajador || src == mntmValidacionDatos) {			
+			if(!resultadoFormulario.getResultado()) {
+				JOptionPane.showMessageDialog(this, resultadoFormulario.getMensaje(), "Validación de datos", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				JOptionPane.showMessageDialog(this, resultadoFormulario.getMensaje(), "Validación de datos", JOptionPane.INFORMATION_MESSAGE);
+			}	
+		}
+		else if (src == btnAñadirProvincia) {
+			ProvinciasJDialog provDgDialog = new ProvinciasJDialog(this, true);
+			provDgDialog.setVisible(true);
 
-		if (src == btnAñadirTrabajador) {
-			
-//			resultadoFormulario = comprobacionesAñadirTrabajador();
-//			if(resultadoFormulario.getResultado()) {
-//				JOptionPane.showMessageDialog(this, resultadoFormulario.getMensaje(), 
-//						"Validación de datos", JOptionPane.ERROR_MESSAGE);
-//			}
-//			else {
-//				añadirTrabajador();
-//				JOptionPane.showMessageDialog(this, resultadoFormulario.getMensaje(), 
-//						"Validación de datos", JOptionPane.INFORMATION_MESSAGE);
-//			}
-			
-			
-		} else if (src == btnEliminarTrabajador) {
+		} else if (src == btnEliminarProvincia) {
+
+		}
+		if (src == btnEliminarTrabajador) {
 
 		} else if (src == btnEliminarProfesion) {
 
 		} else if (src == btnAñadirProfesion) {
 
 		}
-		else if (src == btnAñadirProvincia) {
-
-		} else if (src == btnEliminarProvincia) {
-
-		}
+		
 	}
 	
 	
@@ -508,9 +513,12 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 		
 		sb.append("Problemas de validación:\n");
 		
-		if(tfDNI.getText().isEmpty() || !validarDNI(tfDNI.getText())) {
-			sb.append("\n- DNI carece del formato");
+		if(tfDNI.getText().isEmpty()) {
+			sb.append("\n- DNI no puede estar vacío");
 			error = true;
+		}
+		else if ( !validarDNI(tfDNI.getText())) {
+			sb.append("\n- DMI carece del formato correcto");
 		}
 		if(tfNombre.getText().isEmpty()) {
 			sb.append("\n- Nombre no puede estar vacío");
@@ -536,9 +544,16 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 		
 	}
 
+	/**
+	 * Devuelve true si el DNI es válido y false si no
+	 * @param string
+	 * @return
+	 */
 	private boolean validarDNI(String string) {
-		// TODO Auto-generated method stub
-		return false;
+		if (!(tfDNI.getText().matches("([0-9]{8})[A-Z]"))) {
+			return false;
+		}
+		return true;
 	}
 	
 	private void añadirTrabajador() {
