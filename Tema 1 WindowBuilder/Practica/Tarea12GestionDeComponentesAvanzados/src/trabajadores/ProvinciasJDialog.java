@@ -54,7 +54,7 @@ public class ProvinciasJDialog extends JDialog implements ActionListener, ItemLi
 	 */
 	private void crearInterfaz() {
 
-		setBounds(100, 100, 448, 97);
+		setBounds(100, 100, 454, 104);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -73,6 +73,9 @@ public class ProvinciasJDialog extends JDialog implements ActionListener, ItemLi
 		contentPanel.add(scrollPane, gbc_scrollPane);
 
 		cbProvincias = new JComboBox();
+		cbProvincias.setModel(modeloCb);
+		cbProvincias.setSelectedIndex(-1);
+		cbProvincias.addItemListener(this);
 		scrollPane.setViewportView(cbProvincias);
 
 		JPanel buttonPane = new JPanel();
@@ -85,6 +88,7 @@ public class ProvinciasJDialog extends JDialog implements ActionListener, ItemLi
 		btnAceptar = new JButton("Aceptar");
 		btnAceptar.setActionCommand("OK");
 		btnAceptar.setEnabled(false);
+		btnAceptar.addActionListener(this);
 		GridBagConstraints gbc_btnAceptar = new GridBagConstraints();
 		gbc_btnAceptar.fill = GridBagConstraints.BOTH;
 		gbc_btnAceptar.gridx = 0;
@@ -94,6 +98,7 @@ public class ProvinciasJDialog extends JDialog implements ActionListener, ItemLi
 
 		btnCancelar = new JButton("Cancelar");
 		btnCancelar.setActionCommand("Cancel");
+		btnCancelar.addActionListener(this);
 		GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
 		gbc_btnCancelar.fill = GridBagConstraints.BOTH;
 		gbc_btnCancelar.gridx = 1;
@@ -104,7 +109,7 @@ public class ProvinciasJDialog extends JDialog implements ActionListener, ItemLi
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnAceptar) {
-			
+			((ComponentesAvanzados) getParent()).actualizarProvincias((String)cbProvincias.getSelectedItem());
 		}
 		if (e.getSource() == btnCancelar) {
 			dispose();

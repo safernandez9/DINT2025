@@ -10,14 +10,19 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
 import java.awt.Dialog;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -38,7 +43,7 @@ import javax.swing.JRadioButtonMenuItem;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class ComponentesAvanzados extends JFrame implements ActionListener {
+public class ComponentesAvanzados extends JFrame implements ActionListener , DocumentListener{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -68,8 +73,9 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 	private JMenuItem mntmCerrarSesion;
 	private JMenuItem mntmSalirAplicacion;
 
-	
 	private DefaultComboBoxModel<String> modeloProvincias = new DefaultComboBoxModel();
+	private DefaultListModel<String> modeloProfesion = new DefaultListModel();
+
 	/**
 	 * Launch the application.
 	 */
@@ -96,85 +102,79 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 		setBounds(100, 100, 976, 611);
 
 		// MENU
-		
+
 		JMenuBar menu = new JMenuBar();
 		setJMenuBar(menu);
-		
+
 		/*
 		 * MENU SUPERIOR SESIÓN
 		 */
 		JMenu menuSesion = new JMenu("Sesión");
 		menu.add(menuSesion);
-		
+
 		mntmDetallesSesion = new JMenuItem("Detalles sesión");
 		menuSesion.add(mntmDetallesSesion);
-		
+
 		mntmCerrarSesion = new JMenuItem("Cerrar sesión");
 		menuSesion.add(mntmCerrarSesion);
-		
+
 		mntmSalirAplicacion = new JMenuItem("Salir de la aplicación");
 		menuSesion.add(mntmSalirAplicacion);
 
-		
 		/*
 		 * MENU SUPERIOR ACCIONES
 		 * 
 		 * 2 opciones con una de menú desplegable (mnTrabajador)
 		 */
-		
+
 		JMenu menuAcciones = new JMenu("Acciones");
 		menu.add(menuAcciones);
-		
+
 		JMenu mnTrabajador = new JMenu("Trabajador");
 		menuAcciones.add(mnTrabajador);
-		
+
 		JMenuItem mntmResetTotal = new JMenuItem("Reset total");
 		menuAcciones.add(mntmResetTotal);
-		
+
 		// Submenú de Trabajador
-		
+
 		mntmValidacionDatos = new JMenuItem("Validación datos del trabajador");
 		mnTrabajador.add(mntmValidacionDatos);
 		mntmValidacionDatos.addActionListener(this);
-		
+
 		mntmLimpiarDatos = new JMenuItem("Limpiar datos del trabajador");
 		mnTrabajador.add(mntmLimpiarDatos);
 		mntmLimpiarDatos.addActionListener(this);
-		
+
 		mntmAñadirTrabajador = new JMenuItem("Añadir trabajador");
 		mnTrabajador.add(mntmAñadirTrabajador);
 		mntmAñadirTrabajador.addActionListener(this);
-		
+
 		mntmEliminarTrabajador = new JMenuItem("Eliminar trabajador");
 		mnTrabajador.add(mntmEliminarTrabajador);
 		mntmEliminarTrabajador.addActionListener(this);
-		
-		
 
-		
 		/*
-		 * MENU SUPERIOR MODO
-		 * 2 checkbox de menú, solo una a la vez (ButtonGroup), modo offline preseleccionado
+		 * MENU SUPERIOR MODO 2 checkbox de menú, solo una a la vez (ButtonGroup), modo
+		 * offline preseleccionado
 		 */
-		
+
 		JMenu menuModo = new JMenu("Modo");
 		menu.add(menuModo);
-		
+
 		rdbtnmntmModoOffline = new JRadioButtonMenuItem("Modo offline");
 		rdbtnmntmModoOffline.setSelected(true);
 		menuModo.add(rdbtnmntmModoOffline);
-		
+
 		rdbtnmntmModoOnline = new JRadioButtonMenuItem("Modo online");
 		menuModo.add(rdbtnmntmModoOnline);
-		
+
 		ButtonGroup modoOnlineOfflineButtonGroup = new ButtonGroup();
 		modoOnlineOfflineButtonGroup.add(rdbtnmntmModoOffline);
 		modoOnlineOfflineButtonGroup.add(rdbtnmntmModoOnline);
-		
-		
+
 		// VENTANA PRINCIPAL
-		
-		
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -219,7 +219,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 		tfDNI.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
-				
+
 			}
 		});
 		GridBagConstraints gbc_tfDNI = new GridBagConstraints();
@@ -354,9 +354,20 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 		pnlProfesion.add(scpProfesion, gbc_scpProfesion);
 
 		lstProfesion = new JList();
+		lstProfesion.setModel(modeloProfesion);
+		lstProfesion.addListSelectionListener(e -> {
+		    if (!e.getValueIsAdjusting()) { 
+		        Object seleccionado = lstProfesion.getSelectedValue();
+
+		        if (seleccionado != null) {
+		            btnEliminarProfesion.setEnabled(true);
+		        }
+		    }
+		});
 		scpProfesion.setViewportView(lstProfesion);
 
 		btnEliminarProfesion = new JButton("Eliminar profesión");
+		btnEliminarProfesion.setEnabled(false);
 		GridBagConstraints gbc_btnEliminarProfesion = new GridBagConstraints();
 		gbc_btnEliminarProfesion.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnEliminarProfesion.insets = new Insets(0, 0, 5, 0);
@@ -366,6 +377,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 		pnlProfesion.add(btnEliminarProfesion, gbc_btnEliminarProfesion);
 
 		tfProfesion = new JTextField();
+		tfProfesion.getDocument().addDocumentListener(this);
 		GridBagConstraints gbc_tfProfesion = new GridBagConstraints();
 		gbc_tfProfesion.insets = new Insets(0, 0, 0, 5);
 		gbc_tfProfesion.fill = GridBagConstraints.BOTH;
@@ -375,6 +387,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 		tfProfesion.setColumns(10);
 
 		btnAñadirProfesion = new JButton("Añadir profesión");
+		btnAñadirProfesion.setEnabled(false);
 		GridBagConstraints gbc_btnAñadirProfesion = new GridBagConstraints();
 		gbc_btnAñadirProfesion.fill = GridBagConstraints.BOTH;
 		gbc_btnAñadirProfesion.gridx = 1;
@@ -383,6 +396,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 		pnlProfesion.add(btnAñadirProfesion, gbc_btnAñadirProfesion);
 
 		btnAñadirTrabajador = new JButton("Añadir trabajador");
+		btnAñadirTrabajador.setEnabled(false);
 		GridBagConstraints gbc_btnAñadirTrabajador = new GridBagConstraints();
 		gbc_btnAñadirTrabajador.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnAñadirTrabajador.gridx = 0;
@@ -475,77 +489,114 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object src = e.getSource();
-		ResultadoFormulario resultadoFormulario = comprobacionesAñadirTrabajador();;
-		
-		if (src == btnAñadirTrabajador || src == mntmValidacionDatos) {			
-			if(!resultadoFormulario.getResultado()) {
-				JOptionPane.showMessageDialog(this, resultadoFormulario.getMensaje(), "Validación de datos", JOptionPane.ERROR_MESSAGE);
+		ResultadoFormulario resultadoFormulario = comprobacionesAñadirTrabajador();
+		;
+
+		if (src == btnAñadirTrabajador || src == mntmValidacionDatos) {
+			if (!resultadoFormulario.getResultado()) {
+				JOptionPane.showMessageDialog(this, resultadoFormulario.getMensaje(), "Validación de datos",
+						JOptionPane.ERROR_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(this, resultadoFormulario.getMensaje(), "Validación de datos",
+						JOptionPane.INFORMATION_MESSAGE);
 			}
-			else {
-				JOptionPane.showMessageDialog(this, resultadoFormulario.getMensaje(), "Validación de datos", JOptionPane.INFORMATION_MESSAGE);
-			}	
-		}
-		else if (src == btnAñadirProvincia) {
+		} else if (src == btnEliminarTrabajador) {
+
+		} else if (src == btnAñadirProvincia) {
 			ProvinciasJDialog provDgDialog = new ProvinciasJDialog(this, true);
 			provDgDialog.setVisible(true);
+			provDgDialog.setMinimumSize(provDgDialog.getSize());
 
 		} else if (src == btnEliminarProvincia) {
-
-		}
-		if (src == btnEliminarTrabajador) {
+			if (modeloProvincias.getSize() != 0) {
+				modeloProvincias.removeElement(combProvincia.getSelectedItem());
+				if (modeloProvincias.getSize() == 0) {
+					btnEliminarProvincia.setEnabled(false);
+				}
+			}
+		}  else if (src == btnAñadirProfesion) {
+			 añadirProfesion();
 
 		} else if (src == btnEliminarProfesion) {
-
-		} else if (src == btnAñadirProfesion) {
-
+			eliminarProfesion();
 		}
-		
+
 	}
 	
+	private void añadirTrabajador() {
+		StringBuilder sb = new StringBuilder();
+		
+		
+			
+		}
+	}
 	
+	private void eliminarProfesion() {
+		modeloProfesion.remove(lstProfesion.getSelectedIndex());
+		btnEliminarProfesion.setEnabled(false);
+	}
+	
+	private void añadirProfesion() {
+		
+		boolean repetido = false;
+		
+		for(int i = 0; i < modeloProfesion.size(); i++) {
+			if(tfProfesion.getText().equals(modeloProfesion.getElementAt(i))) {
+				JOptionPane.showMessageDialog(this, "Problema al añadir una nueva profesión.\nProfesión ya está en la lista", "Añadir profesión",
+						JOptionPane.ERROR_MESSAGE);
+				repetido = true;
+			}
+		}
+		
+		if(!repetido) {
+			modeloProfesion.addElement(tfProfesion.getText());
+			tfProfesion.setText("");
+		}
+	}
+
 	/**
-	 * Comprueba que las credenciales del trabajador sean correctas y genera el mensaje para el JDialog
+	 * Comprueba que las credenciales del trabajador sean correctas y genera el
+	 * mensaje para el JDialog
+	 * 
 	 * @return true si ha habido errores, false si no
 	 */
 	public ResultadoFormulario comprobacionesAñadirTrabajador() {
-		boolean error = false;	
+		boolean error = false;
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append("Problemas de validación:\n");
-		
-		if(tfDNI.getText().isEmpty()) {
+
+		if (tfDNI.getText().isEmpty()) {
 			sb.append("\n- DNI no puede estar vacío");
 			error = true;
-		}
-		else if ( !validarDNI(tfDNI.getText())) {
+		} else if (!validarDNI(tfDNI.getText())) {
 			sb.append("\n- DMI carece del formato correcto");
 		}
-		if(tfNombre.getText().isEmpty()) {
+		if (tfNombre.getText().isEmpty()) {
 			sb.append("\n- Nombre no puede estar vacío");
 			error = true;
 		}
-		if(tfApe1.getText().isEmpty()) {
+		if (tfApe1.getText().isEmpty()) {
 			sb.append("\n- Apellido 1 no puede estar vacío");
 			error = true;
 		}
-		if(tfApe2.getText().isEmpty()) {
+		if (tfApe2.getText().isEmpty()) {
 			sb.append("\n- Apellido 2 no puede estar vacío.");
 			error = true;
 		}
-		
-		if(!error) {
+
+		if (!error) {
 			sb.setLength(0);
 			sb.append("Validación exitosa");
 		}
-		
+
 		return new ResultadoFormulario(sb.toString(), error);
-		
-	
-		
+
 	}
 
 	/**
 	 * Devuelve true si el DNI es válido y false si no
+	 * 
 	 * @param string
 	 * @return
 	 */
@@ -555,9 +606,45 @@ public class ComponentesAvanzados extends JFrame implements ActionListener {
 		}
 		return true;
 	}
-	
-	private void añadirTrabajador() {
+
+	// Actualiza el ComboBox de provincias si la provincia no está ya en él
+	public void actualizarProvincias(String provincia) {
+		if (modeloProvincias.getIndexOf(provincia) == -1) {
+			modeloProvincias.addElement(provincia);
+			btnEliminarProvincia.setEnabled(true);
+		}
+	}
+
+	@Override
+	public void insertUpdate(DocumentEvent e) {
+		if(tfProfesion.getText().trim().isEmpty()) {
+			btnAñadirProfesion.setEnabled(false);
+		}
+		else {
+			btnAñadirProfesion.setEnabled(true);
+		}
 		
 	}
-	
-}
+
+	@Override
+	public void removeUpdate(DocumentEvent e) {
+		if(tfProfesion.getText().trim().isEmpty()) {
+			btnAñadirProfesion.setEnabled(false);
+		}
+		else {
+			btnAñadirProfesion.setEnabled(true);
+		}
+	}
+
+	@Override
+	public void changedUpdate(DocumentEvent e) {
+		if(tfProfesion.getText().trim().isEmpty()) {
+			btnAñadirProfesion.setEnabled(true);
+		}
+		
+	}
+
+		
+	}
+
+
