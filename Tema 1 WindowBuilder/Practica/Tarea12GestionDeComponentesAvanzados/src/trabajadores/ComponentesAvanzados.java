@@ -10,16 +10,13 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
 import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.border.EtchedBorder;
 import java.awt.Color;
-import java.awt.Dialog;
-
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -27,9 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JList;
@@ -43,7 +38,7 @@ import javax.swing.JRadioButtonMenuItem;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class ComponentesAvanzados extends JFrame implements ActionListener , DocumentListener{
+public class ComponentesAvanzados extends JFrame implements ActionListener, DocumentListener, ListSelectionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -53,7 +48,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 	private JTextField tfApe2;
 	private JTextField tfProfesion;
 	private JTable tblTrabajadores;
-	private JList lstProfesion;
+	private JList<String> lstProfesion;
 	private JTextArea textArea;
 	private JButton btnEliminarProfesion;
 	private JButton btnAñadirProfesion;
@@ -61,7 +56,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 	private JButton btnEliminarTrabajador;
 	private JButton btnAñadirProvincia;
 	private JButton btnEliminarProvincia;
-	private JComboBox combProvincia;
+	private JComboBox<String> combProvincia;
 	private JScrollPane scpTrabajadores;
 	private JMenuItem mntmEliminarTrabajador;
 	private JMenuItem mntmAñadirTrabajador;
@@ -75,6 +70,15 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 
 	private DefaultComboBoxModel<String> modeloProvincias = new DefaultComboBoxModel();
 	private DefaultListModel<String> modeloProfesion = new DefaultListModel();
+	private DefaultTableModel modeloTablaTrabajadores = new DefaultTableModel(new Object[][] {},
+			new String[] { "Nombre y apellidos", "Provincia", "Profesi\u00F3n" }) {
+		boolean[] columnEditables = new boolean[] { false, false, false };
+
+		public boolean isCellEditable(int row, int column) {
+			return columnEditables[column];
+		}
+	};
+	private JMenuItem mntmResetTotal;
 
 	/**
 	 * Launch the application.
@@ -97,6 +101,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 	 * Create the frame.
 	 */
 	public ComponentesAvanzados() {
+
 		setTitle("Compoñentes Avanzados");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 976, 611);
@@ -133,7 +138,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 		JMenu mnTrabajador = new JMenu("Trabajador");
 		menuAcciones.add(mnTrabajador);
 
-		JMenuItem mntmResetTotal = new JMenuItem("Reset total");
+		mntmResetTotal = new JMenuItem("Reset total");
 		menuAcciones.add(mntmResetTotal);
 
 		// Submenú de Trabajador
@@ -148,10 +153,12 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 
 		mntmAñadirTrabajador = new JMenuItem("Añadir trabajador");
 		mnTrabajador.add(mntmAñadirTrabajador);
+		mntmAñadirTrabajador.setEnabled(false);
 		mntmAñadirTrabajador.addActionListener(this);
 
 		mntmEliminarTrabajador = new JMenuItem("Eliminar trabajador");
 		mnTrabajador.add(mntmEliminarTrabajador);
+		mntmEliminarTrabajador.setEnabled(false);
 		mntmEliminarTrabajador.addActionListener(this);
 
 		/*
@@ -216,12 +223,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 		pnlIdentificacion.add(lblDNI, gbc_lblDNI);
 
 		tfDNI = new JTextField();
-		tfDNI.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-
-			}
-		});
+		tfDNI.getDocument().addDocumentListener(this);
 		GridBagConstraints gbc_tfDNI = new GridBagConstraints();
 		gbc_tfDNI.insets = new Insets(0, 0, 5, 0);
 		gbc_tfDNI.fill = GridBagConstraints.HORIZONTAL;
@@ -239,6 +241,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 		pnlIdentificacion.add(lblNombre, gbc_lblNombre);
 
 		tfNombre = new JTextField();
+		tfNombre.getDocument().addDocumentListener(this);
 		GridBagConstraints gbc_tfNombre = new GridBagConstraints();
 		gbc_tfNombre.insets = new Insets(0, 0, 5, 0);
 		gbc_tfNombre.fill = GridBagConstraints.HORIZONTAL;
@@ -256,6 +259,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 		pnlIdentificacion.add(lblApe1, gbc_lblApe1);
 
 		tfApe1 = new JTextField();
+		tfApe1.getDocument().addDocumentListener(this);
 		GridBagConstraints gbc_tfApe1 = new GridBagConstraints();
 		gbc_tfApe1.insets = new Insets(0, 0, 5, 0);
 		gbc_tfApe1.fill = GridBagConstraints.HORIZONTAL;
@@ -273,6 +277,7 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 		pnlIdentificacion.add(lblApe2, gbc_lblApe2);
 
 		tfApe2 = new JTextField();
+		tfApe2.getDocument().addDocumentListener(this);
 		GridBagConstraints gbc_tfApe2 = new GridBagConstraints();
 		gbc_tfApe2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_tfApe2.gridx = 1;
@@ -297,10 +302,11 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 		gbl_pnlProvincia.rowWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
 		pnlProvincia.setLayout(gbl_pnlProvincia);
 
-		combProvincia = new JComboBox();
+		combProvincia = new JComboBox<>();
 		GridBagConstraints gbc_combProvincia = new GridBagConstraints();
 		combProvincia.setModel(modeloProvincias);
 		combProvincia.setSelectedIndex(-1);
+		combProvincia.addActionListener(this);
 		gbc_combProvincia.insets = new Insets(0, 0, 5, 5);
 		gbc_combProvincia.fill = GridBagConstraints.HORIZONTAL;
 		gbc_combProvincia.gridx = 0;
@@ -353,16 +359,18 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 		gbc_scpProfesion.gridy = 0;
 		pnlProfesion.add(scpProfesion, gbc_scpProfesion);
 
-		lstProfesion = new JList();
+		lstProfesion = new JList<>();
 		lstProfesion.setModel(modeloProfesion);
+		lstProfesion.setSelectedIndex(-1);
+		lstProfesion.addListSelectionListener(this);
 		lstProfesion.addListSelectionListener(e -> {
-		    if (!e.getValueIsAdjusting()) { 
-		        Object seleccionado = lstProfesion.getSelectedValue();
+			if (!e.getValueIsAdjusting()) {
+				Object seleccionado = lstProfesion.getSelectedValue();
 
-		        if (seleccionado != null) {
-		            btnEliminarProfesion.setEnabled(true);
-		        }
-		    }
+				if (seleccionado != null) {
+					btnEliminarProfesion.setEnabled(true);
+				}
+			}
 		});
 		scpProfesion.setViewportView(lstProfesion);
 
@@ -439,17 +447,12 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 		pnlTrabajadores.add(scpTrabajadores, gbc_scpTrabajadores);
 
 		tblTrabajadores = new JTable();
-		tblTrabajadores.setModel(new DefaultTableModel(new Object[][] {},
-				new String[] { "Nombre y apellidos", "Provincia", "Profesi\u00F3n" }) {
-			boolean[] columnEditables = new boolean[] { false, false, false };
-
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
+		tblTrabajadores.setModel(modeloTablaTrabajadores);
+		tblTrabajadores.getSelectionModel().addListSelectionListener(this);
 		scpTrabajadores.setViewportView(tblTrabajadores);
 
 		btnEliminarTrabajador = new JButton("Eliminar trabajador");
+		btnEliminarTrabajador.setEnabled(false);
 		GridBagConstraints gbc_btnEliminarTrabajador = new GridBagConstraints();
 		gbc_btnEliminarTrabajador.insets = new Insets(0, 0, 5, 0);
 		gbc_btnEliminarTrabajador.gridx = 0;
@@ -489,10 +492,12 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object src = e.getSource();
-		ResultadoFormulario resultadoFormulario = comprobacionesAñadirTrabajador();
+		ResultadoFormulario resultadoFormulario = validarCamposDeTexto();
 		;
 
-		if (src == btnAñadirTrabajador || src == mntmValidacionDatos) {
+		if (src == btnAñadirTrabajador || src == mntmAñadirTrabajador) {
+			añadirTrabajador();
+		} else if (src == mntmValidacionDatos) {
 			if (!resultadoFormulario.getResultado()) {
 				JOptionPane.showMessageDialog(this, resultadoFormulario.getMensaje(), "Validación de datos",
 						JOptionPane.ERROR_MESSAGE);
@@ -500,7 +505,8 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 				JOptionPane.showMessageDialog(this, resultadoFormulario.getMensaje(), "Validación de datos",
 						JOptionPane.INFORMATION_MESSAGE);
 			}
-		} else if (src == btnEliminarTrabajador) {
+		} else if (src == btnEliminarTrabajador || src == mntmEliminarTrabajador) {
+			eliminarTrabajador();
 
 		} else if (src == btnAñadirProvincia) {
 			ProvinciasJDialog provDgDialog = new ProvinciasJDialog(this, true);
@@ -514,53 +520,83 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 					btnEliminarProvincia.setEnabled(false);
 				}
 			}
-		}  else if (src == btnAñadirProfesion) {
-			 añadirProfesion();
+		} else if (src == btnAñadirProfesion) {
+			añadirProfesion();
 
 		} else if (src == btnEliminarProfesion) {
 			eliminarProfesion();
+		} else if (src == combProvincia) {
+			validarTodosLosCampos();
 		}
+		else if(src == mntmLimpiarDatos) {
+			tfDNI.setText("");
+			tfNombre.setText("");
+			tfApe1.setText("");
+			tfApe2.setText("");
+		}
+		else if (src == mntmSalirAplicacion) {
+			System.exit(0);
+		} else if (src == mntmResetTotal) {
+			// Reset de todos los campos y modelos
+			tfDNI.setText("");
+			tfNombre.setText("");
+			tfApe1.setText("");
+			tfApe2.setText("");
+			combProvincia.setSelectedIndex(-1);
+			modeloProvincias.removeAllElements();
+			btnEliminarProvincia.setEnabled(false);
+			modeloProfesion.removeAllElements();
+			btnEliminarProfesion.setEnabled(false);
+			modeloTablaTrabajadores.setRowCount(0);
+			btnEliminarTrabajador.setEnabled(false);
+			mntmEliminarTrabajador.setEnabled(false);
+		}
+	}
 
+	private void eliminarTrabajador() {
+		    if (tblTrabajadores.getSelectedRow() != -1) {
+		        ((DefaultTableModel) tblTrabajadores.getModel()).removeRow(tblTrabajadores.getSelectedRow());
+		    }
 	}
-	
-	private void añadirTrabajador() {
-		StringBuilder sb = new StringBuilder();
-		
-		
-			
-		}
-	}
-	
-	private void eliminarProfesion() {
-		modeloProfesion.remove(lstProfesion.getSelectedIndex());
-		btnEliminarProfesion.setEnabled(false);
-	}
-	
+
+	/**
+	 * Añade una nueva profesión al JList si no está ya en él. Si ya está, muestra
+	 * un mensaje de error.
+	 */
 	private void añadirProfesion() {
-		
+
 		boolean repetido = false;
-		
-		for(int i = 0; i < modeloProfesion.size(); i++) {
-			if(tfProfesion.getText().equals(modeloProfesion.getElementAt(i))) {
-				JOptionPane.showMessageDialog(this, "Problema al añadir una nueva profesión.\nProfesión ya está en la lista", "Añadir profesión",
+
+		for (int i = 0; i < modeloProfesion.size(); i++) {
+			if (tfProfesion.getText().equals(modeloProfesion.getElementAt(i))) {
+				JOptionPane.showMessageDialog(this,
+						"Problema al añadir una nueva profesión.\nProfesión ya está en la lista", "Añadir profesión",
 						JOptionPane.ERROR_MESSAGE);
 				repetido = true;
 			}
 		}
-		
-		if(!repetido) {
+
+		if (!repetido) {
 			modeloProfesion.addElement(tfProfesion.getText());
 			tfProfesion.setText("");
 		}
 	}
 
 	/**
+	 * Elimina la profesión seleccionada en el JList
+	 */
+	private void eliminarProfesion() {
+		modeloProfesion.remove(lstProfesion.getSelectedIndex());
+		btnEliminarProfesion.setEnabled(false);
+	}
+
+	/**
 	 * Comprueba que las credenciales del trabajador sean correctas y genera el
 	 * mensaje para el JDialog
 	 * 
-	 * @return true si ha habido errores, false si no
+	 * @return Un objeto ResultadoFormulario con el mensaje y si hubo error o no
 	 */
-	public ResultadoFormulario comprobacionesAñadirTrabajador() {
+	public ResultadoFormulario validarCamposDeTexto() {
 		boolean error = false;
 		StringBuilder sb = new StringBuilder();
 
@@ -607,7 +643,28 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 		return true;
 	}
 
-	// Actualiza el ComboBox de provincias si la provincia no está ya en él
+	/**
+	 * Habilita o deshabilita el botón de añadir trabajador según si todos los
+	 * campos están completos o no.
+	 */
+	private void validarTodosLosCampos() {
+		if (tfDNI.getText().trim().isEmpty() || tfNombre.getText().trim().isEmpty() || tfApe1.getText().trim().isEmpty()
+				|| tfApe2.getText().trim().isEmpty() || combProvincia.getSelectedIndex() == -1
+				|| lstProfesion.getSelectedIndex() == -1) {
+			btnAñadirTrabajador.setEnabled(false);
+			mntmAñadirTrabajador.setEnabled(false);
+		} else {
+			btnAñadirTrabajador.setEnabled(true);
+			mntmAñadirTrabajador.setEnabled(true);
+		}
+
+	}
+
+	/**
+	 * Añade una nueva provincia al JComboBox si no está ya en él.
+	 * 
+	 * @param provincia La provincia a añadir
+	 */
 	public void actualizarProvincias(String provincia) {
 		if (modeloProvincias.getIndexOf(provincia) == -1) {
 			modeloProvincias.addElement(provincia);
@@ -615,36 +672,137 @@ public class ComponentesAvanzados extends JFrame implements ActionListener , Doc
 		}
 	}
 
+	/**
+	 * Añade un nuevo trabajador a la tabla de trabajadores si los datos son
+	 * correctos.
+	 */
+	private void añadirTrabajador() {
+
+		ResultadoFormulario rf = validarTrabajadorCompleto();
+
+		if (rf.getResultado()) {
+			JOptionPane.showMessageDialog(this, rf.getMensaje(), "Error de validación", JOptionPane.ERROR_MESSAGE);
+		} else {
+			String nombreCompleto = tfNombre.getText() + " " + tfApe1.getText() + " " + tfApe2.getText();
+			String provincia = (String) combProvincia.getSelectedItem();
+			String profesion = (String) lstProfesion.getSelectedValue();
+
+			modeloTablaTrabajadores.addRow(new Object[] { nombreCompleto, provincia, profesion });
+
+			// Limpiar campos tras añadir trabajador
+
+			tfDNI.setText("");
+			tfNombre.setText("");
+			tfApe1.setText("");
+			tfApe2.setText("");
+			combProvincia.setSelectedIndex(-1);
+			lstProfesion.clearSelection();
+
+			btnAñadirTrabajador.setEnabled(false);
+			mntmAñadirTrabajador.setEnabled(false);
+
+			JOptionPane.showMessageDialog(this, "Trabajador añadido correctamente", "Añadir trabajador",
+					JOptionPane.INFORMATION_MESSAGE);
+
+		}
+
+	}
+
+	/**
+	 * Valida TODOS los campos del formulario del trabajador
+	 * 
+	 * @return Un objeto ResultadoFormulario con el mensaje y si hubo error o no
+	 */
+	private ResultadoFormulario validarTrabajadorCompleto() {
+		StringBuilder sb = new StringBuilder();
+		ResultadoFormulario resultadoFormulario = validarCamposDeTexto();
+		boolean resultadoValidacion = false;
+
+		if (resultadoFormulario.getResultado()) {
+			sb.append(resultadoFormulario.getMensaje());
+			resultadoValidacion = true;
+		}
+
+		if (combProvincia.getSelectedIndex() == -1) {
+			sb.append("\n- Debe seleccionar una provincia");
+			resultadoValidacion = true;
+		}
+		if (lstProfesion.getSelectedIndex() == -1) {
+			sb.append("\n- Debe seleccionar una profesión");
+			resultadoValidacion = true;
+		}
+
+		return new ResultadoFormulario(sb.toString(), resultadoValidacion);
+
+	}
+
+	// Overrides de DocumentListener para el JTextField de profesión en la
+	// activacion del botón Añadir profesión
+	// y para los tf de DNI, Nombre, Ape1 y Ape2 en la activación del botón Añadir
+	// trabajador
+
 	@Override
 	public void insertUpdate(DocumentEvent e) {
-		if(tfProfesion.getText().trim().isEmpty()) {
-			btnAñadirProfesion.setEnabled(false);
+		if (e.getDocument() == tfProfesion.getDocument()) {
+			if (tfProfesion.getText().trim().isEmpty()) {
+				btnAñadirProfesion.setEnabled(false);
+			} else {
+				btnAñadirProfesion.setEnabled(true);
+			}
+
 		}
-		else {
-			btnAñadirProfesion.setEnabled(true);
-		}
-		
+
+		validarTodosLosCampos();
+
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent e) {
-		if(tfProfesion.getText().trim().isEmpty()) {
-			btnAñadirProfesion.setEnabled(false);
+		if (e.getDocument() == tfProfesion.getDocument()) {
+			if (tfProfesion.getText().trim().isEmpty()) {
+				btnAñadirProfesion.setEnabled(false);
+			} else {
+				btnAñadirProfesion.setEnabled(true);
+			}
 		}
-		else {
-			btnAñadirProfesion.setEnabled(true);
-		}
+
+		validarTodosLosCampos();
+
 	}
 
 	@Override
 	public void changedUpdate(DocumentEvent e) {
-		if(tfProfesion.getText().trim().isEmpty()) {
-			btnAñadirProfesion.setEnabled(true);
+		if (e.getDocument() == tfProfesion.getDocument()) {
+			if (tfProfesion.getText().trim().isEmpty()) {
+				btnAñadirProfesion.setEnabled(true);
+			} else {
+				btnAñadirProfesion.setEnabled(false);
+			}
 		}
-		
+
+		validarTodosLosCampos();
+
 	}
 
-		
+	// Override de ListSelectionListener para el JList de profesiones
+
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		if (e.getSource() == lstProfesion) {
+			validarTodosLosCampos();
+		}
+		if (e.getSource() == tblTrabajadores.getSelectionModel()) {
+			if (!e.getValueIsAdjusting()) {
+				// Si hay una fila seleccionada
+				if (tblTrabajadores.getSelectedRow() != -1) {
+					btnEliminarTrabajador.setEnabled(true);
+					mntmEliminarTrabajador.setEnabled(true);
+					
+				} else {
+					btnEliminarTrabajador.setEnabled(false);
+					mntmEliminarTrabajador.setEnabled(false);
+				}
+			}
+		}
 	}
-
-
+}
