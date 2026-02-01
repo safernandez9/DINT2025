@@ -1,0 +1,2 @@
+Ordeno registros por orden del agrupado
+Para la fila de abajo al arrastrar city me deja decirle el count. Lo edito para añadirle cadenas de texro
