@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="Supabase-20251107/json-20250517.jar"/>
-	<classpathentry kind="lib" path="Supabase-20251107/okhttp-3.14.9.jar"/>
-	<classpathentry kind="lib" path="Supabase-20251107/okio-1.17.6.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
